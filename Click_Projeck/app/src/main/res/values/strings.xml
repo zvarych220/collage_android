@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Click_Projeck</string>
+    <string name="btn_name">Click</string>
+    <string name="title_name">Click button</string>
+    <string name="coin_name">Coins = %d</string>
+    <string name="click_plas_plas">+1 click</string>
+    <string name="click_interval_coin">-1 step to coin</string>
+    <string name="prise">Prise = %d</string>
+    <string name="count">Click + %d</string>
+    <string name="step">Step =%d</string>
+
+
+    <string name="full_value">Full value</string>
+
+
+
+
+
+    <string name="click_10">Well hello! Already tired?</string>
+    <string name="click_25">Wow, 25! Feel your power growing?</string>
+    <string name="click_50">How long will you keep clicking? How long do you think this will last?</string>
+    <string name="click_100">Seriously, you want to get to a thousand?</string>
+    <string name="click_200">Are you even here? Or did your fingers just decide to take another vacation?</string>
+    <string name="click_500">500 clicks... Are you happy? Because I\'m definitely tired.</string>
+    <string name="click_800">You know there are other ways to spend time, right?</string>
+    <string name="click_1000">Ready to keep going? Or are you starting to miss something more exciting?</string>
+    <string name="click_2000">If I could, I\'d have fallen asleep by now.</string>
+    <string name="click_3000">Maybe it\'s better to just take a break? You earned it.</string>
+    <string name="click_5000">Oh, now you\'re really breaking records. What\'s next? Off to the Moon?</string>
+    <string name="click_7000">Seven thousand... you must be on the brink of madness!</string>
+    <string name="click_9000">I\'d just turn off the computer if I were you!</string>
+    <string name="click_10000">You could make a statue with ten thousand clicks. Writing your name on a monument.</string>
+
+
+</resources>
