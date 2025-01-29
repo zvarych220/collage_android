@@ -12,6 +12,11 @@
 
     <string name="full_value">Максимальне значення</string>
 
+    <string name="input_name">Ось ваш пам\'ятник, введіть свій нік</string>
+    <string name="input_name_pole">Ваш нік</string>
+    <string name="bt_done">Готово</string>
+
+
 
 
 

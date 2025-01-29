@@ -10,10 +10,12 @@
     <string name="step">Step =%d</string>
 
 
+    <string name="input_name">Here is your monument, enter your nickname</string>
+    <string name="input_name_pole">Your nickname</string>
+    <string name="bt_done">Done</string>
+
+
     <string name="full_value">Full value</string>
-
-
-
 
 
     <string name="click_10">Well hello! Already tired?</string>
