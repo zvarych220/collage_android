@@ -10,10 +10,20 @@
     <string name="count">Клік + %d</string>
     <string name="step">Крок =%d</string>
 
+    <string name="hello_text">Привіт, введіть свій нік </string>
+    <string name="hello_text_name">Привіт,%1$s! </string>
+    <string name="hello_text_in">Введіть свій нік</string>
+    <string name="hello_bt">Продовжити гру</string>
+
+
+    <string name="language_uk">Українська</string>
+    <string name="language_en">Англійська</string>
+
     <string name="full_value">Максимальне значення</string>
 
     <string name="input_name">Ось ваш пам\'ятник, введіть свій нік</string>
     <string name="input_name_pole">Ваш нік</string>
+
     <string name="bt_done">Готово</string>
 
 

@@ -10,6 +10,18 @@
     <string name="step">Step =%d</string>
 
 
+
+    <string name="hello_text">Hello, enter your nickname</string>
+    <string name="hello_text_in">Enter your nickname</string>
+    <string name="hello_text_name">Hello,%1$s!</string>
+    <string name="hello_bt">Continue the game</string>
+
+
+
+    <string name="language_uk">Ukraine</string>
+    <string name="language_en">English</string>
+
+
     <string name="input_name">Here is your monument, enter your nickname</string>
     <string name="input_name_pole">Your nickname</string>
     <string name="bt_done">Done</string>
