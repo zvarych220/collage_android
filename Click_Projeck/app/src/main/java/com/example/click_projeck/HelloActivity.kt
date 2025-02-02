@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.click_projeck.databinding.ActivityHelloBinding
 
@@ -13,9 +14,20 @@ class HelloActivity : AppCompatActivity() {
     var inputTextName: String = ""
     var flag = false
 
-    companion object {
-        const val REQUEST_CODE_MAIN = 1001
-        const val REQUEST_CODE_RIP = 1002
+    private val mainActivityLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RIPActivity.RESULT_DELETE_PROFILE) {
+            // Профіль видалено
+            flag = false
+            inputTextName = ""
+            val sharedPreferences = getSharedPreferences("game_data", MODE_PRIVATE)
+            sharedPreferences.edit().clear().apply()
+            updateUI()
+        } else if (result.resultCode == RESULT_OK) {
+            // Звичайне повернення
+            updateUI()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +47,7 @@ class HelloActivity : AppCompatActivity() {
             bindingClass.tbHello.text = getString(R.string.hello_bt)
         } else {
             bindingClass.tvInHello.visibility = View.VISIBLE
-            bindingClass.tvInHello.setText(SpannableStringBuilder(""))  
+            bindingClass.tvInHello.setText(SpannableStringBuilder(""))
             bindingClass.tvHello.text = getString(R.string.hello_text)
             bindingClass.tbHello.text = getString(R.string.bt_done)
         }
@@ -53,24 +65,7 @@ class HelloActivity : AppCompatActivity() {
         }
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("Name", inputTextName)
-        startActivityForResult(intent, REQUEST_CODE_MAIN)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            REQUEST_CODE_MAIN -> {
-                if (resultCode == RIPActivity.RESULT_DELETE_PROFILE) {
-                    flag = false
-                    inputTextName = ""
-                    val sharedPreferences = getSharedPreferences("game_data", MODE_PRIVATE)
-                    sharedPreferences.edit().clear().apply()
-                    updateUI()
-                } else {
-                    updateUI()
-                }
-            }
-        }
+        mainActivityLauncher.launch(intent)
     }
 
     private fun saveData() {
