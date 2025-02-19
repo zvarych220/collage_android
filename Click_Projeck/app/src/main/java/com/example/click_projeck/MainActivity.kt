@@ -1,12 +1,18 @@
 package com.example.click_projeck
 
-import android.content.Intent
 import android.os.Bundle
+<<<<<<< Updated upstream
 import android.view.View
+=======
+>>>>>>> Stashed changes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.click_projeck.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+<<<<<<< Updated upstream
     var index = 0
     var coin = 0
     var priseClick = 2
@@ -45,10 +51,32 @@ class MainActivity : AppCompatActivity() {
 
             if (inStep == 9 ){
                 bindingClass.tvPriseClick.text = getString(R.string.full_value)
+=======
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+
+        // Setup bottom navigation
+        binding.bottomNavigation.setupWithNavController(navController)
+
+        // Hide bottom navigation on auth screens
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment, R.id.registerFragment -> binding.bottomNavigation.visibility = android.view.View.GONE
+                else -> binding.bottomNavigation.visibility = android.view.View.VISIBLE
+>>>>>>> Stashed changes
             }
         }
-    }
 
+<<<<<<< Updated upstream
     fun onClickReduceStep(view: View){
         if(coin >= priseSteps){
             if (step > 1) {
@@ -64,8 +92,16 @@ class MainActivity : AppCompatActivity() {
             }
 
 
+=======
+        // Get nickname from intent and pass it to MainFragment
+        val nickname = intent.getStringExtra("Name") ?: ""
+        val bundle = Bundle().apply {
+            putString("Name", nickname)
+>>>>>>> Stashed changes
         }
+        navController.setGraph(R.navigation.nav_graph, bundle)
     }
+<<<<<<< Updated upstream
 
     fun onClickBtn (view: View){
         index += inStep
@@ -132,3 +168,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+=======
+}
+>>>>>>> Stashed changes

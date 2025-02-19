@@ -12,13 +12,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Click_Projeck"
         tools:targetApi="31">
+<<<<<<< Updated upstream
         <activity
             android:name=".MainActivity2"
+=======
+
+        <activity
+            android:name=".CameraActivity"
             android:exported="false" />
         <activity
+            android:name=".FragmentContainerActivity"
+>>>>>>> Stashed changes
+            android:exported="false" />
+
+        <activity
+<<<<<<< Updated upstream
             android:name=".RIPActivity"
             android:exported="false" />
         <activity
+=======
+>>>>>>> Stashed changes
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

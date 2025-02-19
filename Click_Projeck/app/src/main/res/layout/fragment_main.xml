@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-<<<<<<< Updated upstream
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-=======
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
->>>>>>> Stashed changes
+    tools:context=".MainFragment">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_name"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph" />
+        app:layout_constraintVertical_bias="0.292" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btnClick"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@drawable/button_states"
+        android:text="@string/btn_name"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvText"
+        app:layout_constraintVertical_bias="0.147" />
+
+    <TextView
+        android:id="@+id/tvCoin"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/coin_name"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-<<<<<<< Updated upstream
         app:layout_constraintTop_toBottomOf="@+id/btnClick"
         app:layout_constraintVertical_bias="0.229" />
 
@@ -39,14 +50,13 @@
         android:id="@+id/bPlas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onClickPlas"
         android:text="@string/click_plas_plas"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.082"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnClick"
-        app:layout_constraintVertical_bias="0.838" />
+        app:layout_constraintVertical_bias="0.611" />
 
     <TextView
         android:id="@+id/tvPriseClick"
@@ -74,11 +84,10 @@
         app:layout_constraintStart_toStartOf="@+id/bPlas" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnReduceStep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:onClick="onClickReduceStep"
         android:text="@string/click_interval_coin"
         app:layout_constraintBottom_toBottomOf="@+id/bPlas"
         app:layout_constraintStart_toEndOf="@+id/bPlas"
@@ -91,22 +100,31 @@
         android:layout_marginBottom="8dp"
         android:text="@string/step"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/button4"
-        app:layout_constraintEnd_toEndOf="@+id/button4"
+        app:layout_constraintBottom_toTopOf="@+id/btnReduceStep"
+        app:layout_constraintEnd_toEndOf="@+id/btnReduceStep"
         app:layout_constraintHorizontal_bias="0.456"
-        app:layout_constraintStart_toStartOf="@+id/button4" />
+        app:layout_constraintStart_toStartOf="@+id/btnReduceStep" />
 
     <TextView
         android:id="@+id/tvPriseStep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="12dp"
         android:text="@string/prise"
-        app:layout_constraintEnd_toEndOf="@+id/button4"
-        app:layout_constraintStart_toStartOf="@+id/button4"
-        app:layout_constraintTop_toBottomOf="@+id/button4" />
-=======
-        app:menu="@menu/bottom_nav_menu" />
->>>>>>> Stashed changes
+        app:layout_constraintEnd_toEndOf="@+id/btnReduceStep"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="@+id/btnReduceStep"
+        app:layout_constraintTop_toBottomOf="@+id/btnReduceStep" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/tvText"
+        app:layout_constraintEnd_toEndOf="@+id/tvText"
+        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintStart_toStartOf="@+id/tvText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
