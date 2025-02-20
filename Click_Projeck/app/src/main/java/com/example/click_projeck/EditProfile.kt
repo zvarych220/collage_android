@@ -22,10 +22,8 @@ class EditProfile : Fragment() {
     private var _binding: EditProfBinding? = null
     private val binding get() = _binding!!
 
-    // Змінна для збереження нового фото профілю (якщо його змінили)
     private var newProfileBitmap: Bitmap? = null
 
-    // Лончер для камери
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -33,14 +31,12 @@ class EditProfile : Fragment() {
             val image = result.data?.extras?.get("data") as? Bitmap
             image?.let {
                 binding.profileImage.setImageBitmap(it)
-                // Зберігаємо фото у змінну, але не в SharedPreferences,
-                // поки користувач не натисне кнопку Save
+
                 newProfileBitmap = it
             }
         }
     }
 
-    // Лончер для галереї
     private val galleryLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -69,17 +65,14 @@ class EditProfile : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Завантаження існуючих даних користувача
         loadUserData()
         loadProfileImage()
 
-        // Обробка натискання на кнопку для зйомки фото
         binding.cameraButton.setOnClickListener {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             cameraLauncher.launch(cameraIntent)
         }
 
-        // Обробка натискання на кнопку для вибору фото з галереї
         binding.galleryButton.setOnClickListener {
             val galleryIntent = Intent(
                 Intent.ACTION_PICK,
@@ -88,7 +81,6 @@ class EditProfile : Fragment() {
             galleryLauncher.launch(galleryIntent)
         }
 
-        // Обробка натискання кнопки Save: зберігаємо всі зміни одночасно
         binding.button3.setOnClickListener {
             saveUserData()
         }
@@ -130,7 +122,6 @@ class EditProfile : Fragment() {
             return
         }
 
-        // Зчитуємо нові дані з полів введення
         val newNickname = binding.editTextText.text.toString()
         val newEmail = binding.editTextText2.text.toString()
         val newPassword = binding.editTextText3.text.toString()
@@ -140,7 +131,6 @@ class EditProfile : Fragment() {
             return
         }
 
-        // Якщо email змінено, видаляємо старі дані та оновлюємо "CurrentUser"
         if (newEmail != currentEmail) {
             prefs.edit()
                 .remove("${currentEmail}_email")
@@ -150,14 +140,14 @@ class EditProfile : Fragment() {
                 .apply()
         }
 
-        // Зберігаємо оновлені дані користувача у SharedPreferences "UserData"
+
         prefs.edit()
             .putString("${newEmail}_email", newEmail)
             .putString("${newEmail}_nickname", newNickname)
             .putString("${newEmail}_password", newPassword)
             .apply()
 
-        // Якщо користувач обрав нове фото, зберігаємо його у SharedPreferences "UserProfile"
+
         newProfileBitmap?.let {
             saveProfileImage(it)
         }

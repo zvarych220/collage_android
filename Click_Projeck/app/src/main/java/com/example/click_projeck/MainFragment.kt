@@ -2,12 +2,13 @@ package com.example.click_projeck
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.click_projeck.databinding.FragmentMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,32 +49,40 @@ class MainFragment : Fragment() {
             tvPriseClick.text = getString(R.string.prise, priseClick)
             tvPriseStep.text = getString(R.string.prise, priseSteps)
             tvName.text = nickname
-            tvCount.apply {
-                visibility = View.VISIBLE
-                text = getString(R.string.count, inStep)
-            }
-            tvStep.apply {
-                visibility = View.VISIBLE
-                text = getString(R.string.step, step)
-            }
-            tvCoin.apply {
-                visibility = View.VISIBLE
-                text = getString(R.string.coin_name, coin)
-            }
+
+            // Update coin display
+            tvCoin.visibility = View.VISIBLE
+            tvCoin.text = getString(R.string.coin_name, coin)
+
+            // Update step counter
+            tvCount.visibility = View.VISIBLE
+            tvCount.text = getString(R.string.count, inStep)
+
+            // Update step display
+            tvStep.visibility = View.VISIBLE
+            tvStep.text = getString(R.string.step, step)
+
+            // Update main counter
             tvText.text = index.toString()
+
             updateButtonText()
+
+            // Debug log
+            Log.d("MainFragment", "UI Updated - Coins: $coin, InStep: $inStep, Step: $step")
         }
     }
 
     private fun setupClickListeners() {
         binding.apply {
-            bPlas.setOnClickListener {
+            tvPriseClick.setOnClickListener {
+                Log.d("MainFragment", "PriseClick clicked - Current coins: $coin, Price: $priseClick")
                 onClickPlas()
             }
 
 
 
-            btnReduceStep.setOnClickListener {
+            tvPriseStep.setOnClickListener {
+                Log.d("MainFragment", "PriseStep clicked - Current coins: $coin, Price: $priseSteps")
                 onClickReduceStep()
             }
 
@@ -86,19 +95,28 @@ class MainFragment : Fragment() {
     private fun onClickPlas() {
         if (coin >= priseClick) {
             if (inStep <= 9) {
-                inStep++
                 coin -= priseClick
+                inStep++
                 priseClick *= 2
-                binding.tvCount.text = getString(R.string.count, inStep)
 
-                if (inStep == 9) {
-                    binding.tvPriseClick.text = getString(R.string.full_value)
-                } else {
-                    binding.tvPriseClick.text = getString(R.string.prise, priseClick)
+                binding.apply {
+                    tvCount.visibility = View.VISIBLE
+                    tvCount.text = getString(R.string.count, inStep)
+                    tvCoin.text = getString(R.string.coin_name, coin)
+
+                    if (inStep == 9) {
+                        tvPriseClick.text = getString(R.string.full_value)
+                    } else {
+                        tvPriseClick.text = getString(R.string.prise, priseClick)
+                    }
                 }
 
                 saveDataAsync()
+                Log.d("MainFragment", "Upgrade successful - New inStep: $inStep, Remaining coins: $coin")
             }
+        } else {
+            Toast.makeText(context, "Not enough coins! Need $priseClick coins.", Toast.LENGTH_SHORT).show()
+            Log.d("MainFragment", "Not enough coins for upgrade - Has: $coin, Needs: $priseClick")
         }
     }
 
@@ -109,30 +127,45 @@ class MainFragment : Fragment() {
                 priseSteps *= 2
                 step--
 
-                if (step == 1) {
-                    binding.tvPriseStep.text = getString(R.string.full_value)
-                } else {
-                    binding.tvPriseStep.text = getString(R.string.prise, priseSteps)
+                binding.apply {
+                    tvStep.visibility = View.VISIBLE
+                    tvStep.text = getString(R.string.step, step)
+                    tvCoin.text = getString(R.string.coin_name, coin)
+
+                    if (step == 1) {
+                        tvPriseStep.text = getString(R.string.full_value)
+                    } else {
+                        tvPriseStep.text = getString(R.string.prise, priseSteps)
+                    }
                 }
 
-                binding.tvStep.text = getString(R.string.step, step)
                 saveDataAsync()
+                Log.d("MainFragment", "Step reduced - New step: $step, Remaining coins: $coin")
             }
+        } else {
+            Toast.makeText(context, "Not enough coins! Need $priseSteps coins.", Toast.LENGTH_SHORT).show()
+            Log.d("MainFragment", "Not enough coins for step reduction - Has: $coin, Needs: $priseSteps")
         }
     }
 
     private fun onClickBtn() {
         index += inStep
         indexNumber += inStep
+
         while (indexNumber >= step) {
             coin++
             indexNumber -= step
         }
 
-        binding.tvCoin.text = getString(R.string.coin_name, coin)
-        binding.tvText.text = index.toString()
+        binding.apply {
+            tvCoin.visibility = View.VISIBLE
+            tvCoin.text = getString(R.string.coin_name, coin)
+            tvText.text = index.toString()
+        }
+
         updateButtonText()
         saveDataAsync()
+        Log.d("MainFragment", "Button clicked - Index: $index, Coins: $coin")
     }
 
     private fun updateButtonText() {
@@ -192,7 +225,6 @@ class MainFragment : Fragment() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            // Reset to default values if loading fails
             resetToDefaultValues()
         }
     }
@@ -209,12 +241,12 @@ class MainFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        saveData() // Save when the fragment is paused
+        saveData()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        saveData() // Save when the fragment is destroyed
+        saveData()
         _binding = null
     }
 
