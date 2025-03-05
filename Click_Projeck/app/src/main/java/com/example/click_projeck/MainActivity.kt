@@ -7,6 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.click_projeck.databinding.ActivityMainBinding
+import android.view.View
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -26,6 +27,20 @@ class MainActivity : AppCompatActivity() {
         // Ініціалізація BottomNavigationView
         bottomNavigationView = binding.bottomNavigation
         bottomNavigationView.setupWithNavController(navController)
+
+        // Контроль видимості нижньої навігації
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment, R.id.registerFragment -> {
+                    // Приховати нижню навігацію для екранів входу та реєстрації
+                    bottomNavigationView.visibility = View.GONE
+                }
+                else -> {
+                    // Показати нижню навігацію для інших екранів
+                    bottomNavigationView.visibility = View.VISIBLE
+                }
+            }
+        }
 
         // Отримання нікнейму з intent та передача в граф навігації
         val nickname = intent.getStringExtra("Name") ?: ""

@@ -5,7 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
-    <!-- Existing fragments -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.click_projeck.LoginFragment"
@@ -35,13 +34,6 @@
         android:label="MainFragment"
         tools:layout="@layout/fragment_main" />
 
-    <fragment
-        android:id="@+id/cameraFragment"
-        android:name="com.example.click_projeck.CameraFragment"
-        android:label="CameraFragment"
-        tools:layout="@layout/fragment_camera" />
-
-    <!-- New fragments -->
     <fragment
         android:id="@+id/emptyFragment"
         android:name="com.example.click_projeck.EmptyFragment"

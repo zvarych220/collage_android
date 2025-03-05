@@ -9,20 +9,30 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.click_projeck.databinding.EditProfBinding
+import data.AppDatabase
+import data.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 class EditProfile : Fragment() {
     private var _binding: EditProfBinding? = null
     private val binding get() = _binding!!
+    private lateinit var db: AppDatabase
 
     private var newProfileBitmap: Bitmap? = null
+    private var currentUserEmail: String = ""
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -31,7 +41,6 @@ class EditProfile : Fragment() {
             val image = result.data?.extras?.get("data") as? Bitmap
             image?.let {
                 binding.profileImage.setImageBitmap(it)
-
                 newProfileBitmap = it
             }
         }
@@ -56,7 +65,7 @@ class EditProfile : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = EditProfBinding.inflate(inflater, container, false)
         return binding.root
@@ -65,8 +74,14 @@ class EditProfile : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Ініціалізація бази даних
+        db = AppDatabase.getInstance(requireContext())
+
+        // Отримання поточного email
+        val prefs = requireContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+        currentUserEmail = prefs.getString("CurrentUser", "") ?: ""
+
         loadUserData()
-        loadProfileImage()
 
         binding.cameraButton.setOnClickListener {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -86,84 +101,126 @@ class EditProfile : Fragment() {
         }
     }
 
-
     private fun loadUserData() {
-        val prefs = requireContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
-        val currentEmail = prefs.getString("CurrentUser", "") ?: ""
-        if (currentEmail.isNotEmpty()) {
-            val email = prefs.getString("${currentEmail}_email", "") ?: ""
-            val nickname = prefs.getString("${currentEmail}_nickname", "") ?: ""
-            val password = prefs.getString("${currentEmail}_password", "") ?: ""
+        if (currentUserEmail.isNotEmpty()) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val user = db.userDao().getUserByEmail(currentUserEmail)
 
-            binding.editTextText.setText(nickname)
-            binding.editTextText2.setText(email)
-            binding.editTextText3.setText(password)
+                withContext(Dispatchers.Main) {
+                    user?.let {
+                        binding.editTextText.setText(it.name)
+                        binding.editTextText2.setText(it.email)
+                        binding.editTextText3.setText(it.password)
+
+                        // Завантаження зображення профілю
+                        it.profileImage?.let { encodedImage ->
+                            val decodedBytes = Base64.decode(encodedImage, Base64.DEFAULT)
+                            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                            binding.profileImage.setImageBitmap(bitmap)
+                        }
+                    }
+                }
+            }
         }
     }
 
-
-    private fun loadProfileImage() {
-        val prefs = requireContext().getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
-        val encodedImage = prefs.getString("profileImage", null)
-        if (encodedImage != null) {
-            val decodedBytes = Base64.decode(encodedImage, Base64.DEFAULT)
-            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-            binding.profileImage.setImageBitmap(bitmap)
+    private fun validateInput(
+        nickname: String,
+        email: String,
+        password: String
+    ): Boolean {
+        return when {
+            nickname.isEmpty() -> {
+                Toast.makeText(context, "Введіть нікнейм", Toast.LENGTH_SHORT).show()
+                false
+            }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                Toast.makeText(context, "Некоректний формат email", Toast.LENGTH_SHORT).show()
+                false
+            }
+            password.length < 6 -> {
+                Toast.makeText(context, "Пароль має бути не менше 6 символів", Toast.LENGTH_SHORT).show()
+                false
+            }
+            else -> true
         }
     }
-
 
     private fun saveUserData() {
-        val prefs = requireContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
-        val currentEmail = prefs.getString("CurrentUser", "") ?: ""
+        val newNickname = binding.editTextText.text.toString().trim()
+        val newEmail = binding.editTextText2.text.toString().trim()
+        val newPassword = binding.editTextText3.text.toString().trim()
 
-        if (currentEmail.isEmpty()) {
-            Toast.makeText(context, "No current user", Toast.LENGTH_SHORT).show()
+        // Валідація введених даних
+        if (!validateInput(newNickname, newEmail, newPassword)) {
             return
         }
 
-        val newNickname = binding.editTextText.text.toString()
-        val newEmail = binding.editTextText2.text.toString()
-        val newPassword = binding.editTextText3.text.toString()
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // Пошук поточного користувача
+                val currentUser = db.userDao().getUserByEmail(currentUserEmail)
 
-        if (newNickname.isEmpty() || newEmail.isEmpty() || newPassword.isEmpty()) {
-            Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
-            return
+                if (currentUser == null) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Користувача не знайдено", Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+
+                // Перевірка чи email вже існує (якщо email змінився)
+                if (newEmail != currentUserEmail) {
+                    val emailExists = db.userDao().isEmailExists(newEmail)
+                    if (emailExists > 0) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context, "Користувач з таким email вже існує", Toast.LENGTH_SHORT).show()
+                        }
+                        return@launch
+                    }
+                }
+
+                val profileImageString = newProfileBitmap?.let { bitmap ->
+                    val byteArrayOutputStream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+                    Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT)
+                }
+
+                // Створення оновленого користувача
+                val updatedUser = User(
+                    id = currentUser.id,
+                    name = newNickname,
+                    email = newEmail,
+                    password = newPassword,
+                    about = currentUser.about,
+                    dob = currentUser.dob,
+                    profileImage = profileImageString ?: currentUser.profileImage
+                )
+
+                // Видалення старого запису, якщо email змінився
+                if (currentUserEmail != newEmail) {
+                    db.userDao().deleteUserByEmail(currentUserEmail)
+                }
+
+                // Оновлення запису в базі даних
+                db.userDao().insertUser(updatedUser)
+
+                // Оновлення поточного email в SharedPreferences
+                requireActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("CurrentUser", newEmail)
+                    .apply()
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Дані успішно оновлено", Toast.LENGTH_SHORT).show()
+                    findNavController().navigateUp() // Повернення до попереднього фрагменту
+                }
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Помилка оновлення: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
-
-        if (newEmail != currentEmail) {
-            prefs.edit()
-                .remove("${currentEmail}_email")
-                .remove("${currentEmail}_nickname")
-                .remove("${currentEmail}_password")
-                .putString("CurrentUser", newEmail)
-                .apply()
-        }
-
-
-        prefs.edit()
-            .putString("${newEmail}_email", newEmail)
-            .putString("${newEmail}_nickname", newNickname)
-            .putString("${newEmail}_password", newPassword)
-            .apply()
-
-
-        newProfileBitmap?.let {
-            saveProfileImage(it)
-        }
-
-        Toast.makeText(context, "Data saved", Toast.LENGTH_SHORT).show()
-    }
-
-
-    private fun saveProfileImage(bitmap: Bitmap) {
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-        val encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT)
-        requireActivity().getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
-            .edit()
-            .putString("profileImage", encodedImage)
-            .apply()
     }
 
     override fun onDestroyView() {
