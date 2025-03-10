@@ -99,6 +99,18 @@ class EditProfile : Fragment() {
         binding.button3.setOnClickListener {
             saveUserData()
         }
+        binding.deleteProfileButton.setOnClickListener {
+
+
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Delete Profile")
+                .setMessage("Are you sure you want to delete your profile? This action cannot be undone.")
+                .setPositiveButton("Delete") { _, _ ->
+                    deleteUserProfile()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
     }
 
     private fun loadUserData() {
@@ -223,6 +235,29 @@ class EditProfile : Fragment() {
         }
     }
 
+
+    private fun deleteUserProfile() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                db.userDao().deleteUserByEmail(currentUserEmail)
+
+                withContext(Dispatchers.Main) {
+                    requireActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                        .edit()
+                        .remove("CurrentUser")
+                        .apply()
+
+                    Toast.makeText(context, "Профіль успішно видалено", Toast.LENGTH_SHORT).show()
+
+                    findNavController().navigate(R.id.loginFragment)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Помилка видалення: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
