@@ -9,7 +9,7 @@
         android:icon="@drawable/ic_camera"
         android:title="Camera" />
     <item
-        android:id="@+id/emptyFragment"
+        android:id="@+id/productFragment"
         android:icon="@drawable/ic_empty"
         android:title="Empty" />
     <item

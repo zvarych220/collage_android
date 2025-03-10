@@ -13,5 +13,6 @@ data class User(
     val password: String,
     val about: String,
     val dob: String,
-    val profileImage: String? = null
+    val profileImage: String? = null,
+    val isAdmin: Boolean = false
 )

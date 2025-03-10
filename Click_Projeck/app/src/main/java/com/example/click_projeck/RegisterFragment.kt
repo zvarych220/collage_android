@@ -80,12 +80,26 @@ class RegisterFragment : Fragment() {
 
             lifecycleScope.launch(Dispatchers.IO) {
                 val emailExists = db.userDao().isEmailExists(email)
+                val userCount = db.userDao().getUserCount()
+
                 withContext(Dispatchers.Main) {
                     if (emailExists > 0) {
                         Toast.makeText(requireContext(), "Користувач з таким email вже існує", Toast.LENGTH_SHORT).show()
                     } else {
+                        // Визначаємо, чи це перший користувач (буде адміном)
+                        val isFirstUser = userCount == 0
+
                         // Реєстрація
-                        val user = User(null, nickname, email, password, about, dob)
+                        val user = User(
+                            null,
+                            nickname,
+                            email,
+                            password,
+                            about,
+                            dob,
+                            null,
+                            isFirstUser
+                        )
 
                         lifecycleScope.launch(Dispatchers.IO) {
                             db.userDao().insertUser(user)
@@ -100,7 +114,13 @@ class RegisterFragment : Fragment() {
                                     apply()
                                 }
 
-                                Toast.makeText(requireContext(), "Реєстрація успішна!", Toast.LENGTH_SHORT).show()
+                                val message = if (isFirstUser) {
+                                    "Реєстрація успішна! Ви призначені адміністратором."
+                                } else {
+                                    "Реєстрація успішна!"
+                                }
+
+                                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                                 navController.navigate(R.id.action_registerFragment_to_loginFragment)
                             }
                         }

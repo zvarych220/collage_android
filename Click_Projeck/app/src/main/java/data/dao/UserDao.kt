@@ -22,4 +22,10 @@ interface UserDao {
 
     @Query("SELECT COUNT(*) FROM users WHERE email = :email")
     suspend fun isEmailExists(email: String): Int
+
+    @Query("SELECT COUNT(*) FROM users")
+    suspend fun getUserCount(): Int
+
+    @Query("UPDATE users SET isAdmin = 1 WHERE id = :userId")
+    suspend fun setUserAsAdmin(userId: Int)
 }

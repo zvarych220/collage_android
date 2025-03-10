@@ -35,10 +35,16 @@
         tools:layout="@layout/fragment_main" />
 
     <fragment
-        android:id="@+id/emptyFragment"
-        android:name="com.example.click_projeck.EmptyFragment"
-        android:label="EmptyFragment"
-        tools:layout="@layout/fragment_empty" />
+        android:id="@+id/productFragment"
+        android:name="com.example.click_projeck.ProductFragment"
+        android:label="ProductFragment"
+        tools:layout="@layout/fragment_product" />
+
+
+    <fragment
+        android:id="@+id/editProfile"
+        android:name="com.example.click_projeck.EditProfile"
+        android:label="EditProfile" />
 
     <fragment
         android:id="@+id/profileFragment"
@@ -48,10 +54,22 @@
         <action
             android:id="@+id/action_profileFragment_to_editProfile"
             app:destination="@id/editProfile" />
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
+
+
     <fragment
-        android:id="@+id/editProfile"
-        android:name="com.example.click_projeck.EditProfile"
-        android:label="EditProfile" />
+        android:id="@+id/adminFragment"
+        android:name="com.example.click_projeck.AdminFragment"
+        android:label="Admin Panel">
+    </fragment>
+
+    <action
+        android:id="@+id/action_profileFragment_to_adminFragment"
+        app:destination="@id/adminFragment" />
 
 </navigation>

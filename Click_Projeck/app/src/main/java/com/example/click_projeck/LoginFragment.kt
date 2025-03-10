@@ -19,6 +19,7 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private lateinit var db: AppDatabase
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +34,9 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         db = AppDatabase.getInstance(requireContext())
+        sessionManager = SessionManager(requireContext())
+
+        // Ми НЕ перевіряємо сесію тут, оскільки це робить MainActivity
 
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString().trim()
@@ -43,22 +47,20 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-
             lifecycleScope.launch(Dispatchers.IO) {
                 val user = db.userDao().getUserByEmail(email)
                 withContext(Dispatchers.Main) {
                     if (user != null && user.password == password) {
-                        requireContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
-                            .edit()
-                            .putString("CurrentUser", email)
-                            .apply()
+                        // Створюємо сесію
+                        sessionManager.createSession(email, user.name, user.isAdmin)
 
                         Toast.makeText(context, "Вхід успішний!", Toast.LENGTH_SHORT).show()
                         val bundle = Bundle().apply { putString("Name", user.name) }
                         findNavController().navigate(R.id.action_loginFragment_to_mainFragment, bundle)
+                    } else {
+                        Toast.makeText(context, "Невірний логін або пароль", Toast.LENGTH_SHORT).show()
                     }
                 }
-
             }
         }
 

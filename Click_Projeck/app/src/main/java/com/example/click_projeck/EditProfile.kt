@@ -30,9 +30,12 @@ class EditProfile : Fragment() {
     private var _binding: EditProfBinding? = null
     private val binding get() = _binding!!
     private lateinit var db: AppDatabase
+    private lateinit var sessionManager: SessionManager
 
     private var newProfileBitmap: Bitmap? = null
     private var currentUserEmail: String = ""
+    private var currentUserAbout: String = ""
+    private var currentUserDob: String = ""
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -74,12 +77,15 @@ class EditProfile : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Ініціалізація бази даних
+        // Ініціалізація бази даних та SessionManager
         db = AppDatabase.getInstance(requireContext())
+        sessionManager = SessionManager(requireContext())
 
-        // Отримання поточного email
-        val prefs = requireContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
-        currentUserEmail = prefs.getString("CurrentUser", "") ?: ""
+        // Отримання поточного email користувача з SessionManager
+        if (sessionManager.isLoggedIn()) {
+            val userDetails = sessionManager.getUserDetails()
+            currentUserEmail = userDetails[SessionManager.KEY_USER_EMAIL] ?: ""
+        }
 
         loadUserData()
 
@@ -99,9 +105,8 @@ class EditProfile : Fragment() {
         binding.button3.setOnClickListener {
             saveUserData()
         }
+
         binding.deleteProfileButton.setOnClickListener {
-
-
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
                 .setTitle("Delete Profile")
                 .setMessage("Are you sure you want to delete your profile? This action cannot be undone.")
@@ -124,15 +129,30 @@ class EditProfile : Fragment() {
                         binding.editTextText2.setText(it.email)
                         binding.editTextText3.setText(it.password)
 
+                        // Зберігаємо додаткові дані користувача для використання пізніше
+                        currentUserAbout = it.about
+                        currentUserDob = it.dob
+
                         // Завантаження зображення профілю
                         it.profileImage?.let { encodedImage ->
                             val decodedBytes = Base64.decode(encodedImage, Base64.DEFAULT)
                             val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
                             binding.profileImage.setImageBitmap(bitmap)
+                        } ?: run {
+                            // Встановлюємо зображення за замовчуванням, якщо profileImage відсутній
+                            binding.profileImage.setImageResource(R.drawable.ic_profile)
                         }
+                    } ?: run {
+                        // Якщо користувача не знайдено
+                        Toast.makeText(context, "Користувача не знайдено", Toast.LENGTH_SHORT).show()
+                        findNavController().navigateUp()
                     }
                 }
             }
+        } else {
+            // Якщо email порожній, повернутись на попередній екран
+            Toast.makeText(context, "Помилка: користувач не авторизований", Toast.LENGTH_SHORT).show()
+            findNavController().navigateUp()
         }
     }
 
@@ -203,8 +223,8 @@ class EditProfile : Fragment() {
                     name = newNickname,
                     email = newEmail,
                     password = newPassword,
-                    about = currentUser.about,
-                    dob = currentUser.dob,
+                    about = currentUserAbout,  // Зберігаємо існуючі значення для about
+                    dob = currentUserDob,      // Зберігаємо існуючі значення для dob
                     profileImage = profileImageString ?: currentUser.profileImage
                 )
 
@@ -216,11 +236,15 @@ class EditProfile : Fragment() {
                 // Оновлення запису в базі даних
                 db.userDao().insertUser(updatedUser)
 
-                // Оновлення поточного email в SharedPreferences
-                requireActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE)
-                    .edit()
-                    .putString("CurrentUser", newEmail)
-                    .apply()
+                // Оновлення сесії з новими даними
+
+                // Якщо картинка змінилася, зберігаємо її у SharedPreferences також
+                profileImageString?.let {
+                    requireActivity().getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
+                        .edit()
+                        .putString("profileImage", it)
+                        .apply()
+                }
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(context, "Дані успішно оновлено", Toast.LENGTH_SHORT).show()
@@ -235,17 +259,20 @@ class EditProfile : Fragment() {
         }
     }
 
-
     private fun deleteUserProfile() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 db.userDao().deleteUserByEmail(currentUserEmail)
 
                 withContext(Dispatchers.Main) {
-                    requireActivity().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                    // Видаляємо дані з SharedPreferences
+                    requireActivity().getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
                         .edit()
-                        .remove("CurrentUser")
+                        .clear()
                         .apply()
+
+                    // Вихід із системи
+                    sessionManager.logout()
 
                     Toast.makeText(context, "Профіль успішно видалено", Toast.LENGTH_SHORT).show()
 
@@ -258,6 +285,7 @@ class EditProfile : Fragment() {
             }
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

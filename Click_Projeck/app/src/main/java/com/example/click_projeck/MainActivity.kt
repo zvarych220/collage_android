@@ -3,6 +3,7 @@ package com.example.click_projeck
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -13,16 +14,43 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var sessionManager: SessionManager
+    private lateinit var navGraph: NavGraph
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sessionManager = SessionManager(this)
+
         // Ініціалізація NavController
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
+
+        // Отримуємо граф навігації
+        val navInflater = navController.navInflater
+        navGraph = navInflater.inflate(R.navigation.nav_graph)
+
+        // Визначаємо початковий пункт призначення на основі статусу входу
+        if (sessionManager.isLoggedIn()) {
+            // Якщо користувач вже ввійшов у систему, переходимо на mainFragment
+            navGraph.setStartDestination(R.id.mainFragment)
+
+            // Готуємо дані користувача для mainFragment
+            val userDetails = sessionManager.getUserDetails()
+            val bundle = Bundle().apply {
+                putString("Name", userDetails[SessionManager.KEY_USER_NAME])
+            }
+
+            // Встановлюємо граф навігації з бандлом
+            navController.setGraph(navGraph, bundle)
+        } else {
+            // Якщо користувач не ввійшов у систему, залишаємо стандартний loginFragment
+            navGraph.setStartDestination(R.id.loginFragment)
+            navController.graph = navGraph
+        }
 
         // Ініціалізація BottomNavigationView
         bottomNavigationView = binding.bottomNavigation
@@ -41,12 +69,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        // Отримання нікнейму з intent та передача в граф навігації
-        val nickname = intent.getStringExtra("Name") ?: ""
-        val bundle = Bundle().apply {
-            putString("Name", nickname)
-        }
-        navController.setGraph(R.navigation.nav_graph, bundle)
     }
+
+    // Додамо метод для виходу з облікового запису
+   /* fun logout() {
+        sessionManager.logout()
+        // Перезавантажуємо граф навігації, щоб повернутися до loginFragment
+        navGraph.setStartDestination(R.id.loginFragment)
+        navController.graph = navGraph
+        }*/
+
 }

@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.click_projeck.databinding.FragmentEmptyBinding
+import com.example.click_projeck.databinding.FragmentAdminBinding
 
-class EmptyFragment : Fragment() {
-    private var _binding: FragmentEmptyBinding? = null
+class AdminFragment : Fragment() {
+    private var _binding: FragmentAdminBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -16,8 +16,14 @@ class EmptyFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEmptyBinding.inflate(inflater, container, false)
+        _binding = FragmentAdminBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Implement admin functionality here
     }
 
     override fun onDestroyView() {

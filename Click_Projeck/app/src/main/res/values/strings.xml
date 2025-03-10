@@ -32,6 +32,8 @@
     <string name="click_7000">Seven thousand... you must be on the brink of madness!</string>
     <string name="click_9000">I\'d just turn off the computer if I were you!</string>
     <string name="click_10000">You could make a statue with ten thousand clicks. Writing your name on a monument.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

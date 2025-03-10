@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Admin Panel"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Add admin functionality controls here -->
+
+    <!-- Example buttons for admin functions -->
+    <Button
+        android:id="@+id/btnManageUsers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Manage Users"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnManageProducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Manage Products"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnSystemSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="System Settings"
+        android:layout_marginBottom="8dp"/>
+
+</LinearLayout>
