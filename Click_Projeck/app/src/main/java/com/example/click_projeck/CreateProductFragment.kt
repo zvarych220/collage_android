@@ -32,6 +32,9 @@ class CreateProductFragment : Fragment() {
         binding.btnSaveProduct.setOnClickListener {
             saveProduct()
         }
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun saveProduct() {
