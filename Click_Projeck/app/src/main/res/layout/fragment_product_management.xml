@@ -8,32 +8,24 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Admin Panel"
+        android:text="Product Management"
         android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_marginBottom="24dp"/>
 
-
     <Button
-        android:id="@+id/btnManageUsers"
+        android:id="@+id/btnViewProducts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Manage Users"
+        android:text="View All Products"
         android:layout_marginBottom="8dp"/>
 
     <Button
-        android:id="@+id/btnManageProducts"
+        android:id="@+id/btnCreateProduct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Manage Products"
-        android:layout_marginBottom="8dp"/>
-
-    <Button
-        android:id="@+id/btnSystemSettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="System Settings"
+        android:text="Create New Product"
         android:layout_marginBottom="8dp"/>
 
 </LinearLayout>

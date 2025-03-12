@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.click_projeck.databinding.FragmentAdminBinding
+import com.example.click_projeck.databinding.FragmentProductManagementBinding
 
-class AdminFragment : Fragment() {
-    private var _binding: FragmentAdminBinding? = null
+class ProductManagementFragment : Fragment() {
+    private var _binding: FragmentProductManagementBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -17,21 +17,19 @@ class AdminFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAdminBinding.inflate(inflater, container, false)
+        _binding = FragmentProductManagementBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnManageProducts.setOnClickListener {
-            findNavController().navigate(R.id.action_adminFragment_to_productManagementFragment)
+        binding.btnViewProducts.setOnClickListener {
+            findNavController().navigate(R.id.action_productManagementFragment_to_productListFragment)
         }
 
-        binding.btnManageUsers.setOnClickListener {
-        }
-
-        binding.btnSystemSettings.setOnClickListener {
+        binding.btnCreateProduct.setOnClickListener {
+            findNavController().navigate(R.id.action_productManagementFragment_to_createProductFragment)
         }
     }
 
