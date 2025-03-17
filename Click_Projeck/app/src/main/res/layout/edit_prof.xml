@@ -87,14 +87,39 @@
         app:layout_constraintStart_toStartOf="@+id/editTextText3"
         app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
 
+    <RadioGroup
+        android:id="@+id/roleRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/button3"
+        app:layout_constraintStart_toStartOf="@+id/button3"
+        app:layout_constraintTop_toBottomOf="@+id/button3">
+
+        <RadioButton
+            android:id="@+id/adminRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Admin" />
+
+        <RadioButton
+            android:id="@+id/userRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User" />
+    </RadioGroup>
+
     <Button
         android:id="@+id/deleteProfileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Delete Profile"
+        android:layout_marginTop="12dp"
         android:backgroundTint="#FF5252"
-        app:layout_constraintEnd_toEndOf="@+id/button3"
-        app:layout_constraintStart_toStartOf="@+id/button3"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        android:text="Delete Profile"
+        app:layout_constraintEnd_toEndOf="@+id/roleRadioGroup"
+        app:layout_constraintStart_toStartOf="@+id/roleRadioGroup"
+        app:layout_constraintTop_toBottomOf="@+id/roleRadioGroup" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

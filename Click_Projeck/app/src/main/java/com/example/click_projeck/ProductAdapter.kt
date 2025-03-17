@@ -1,5 +1,8 @@
 package com.example.click_projeck
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -30,8 +33,20 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
             binding.textViewProductName.text = product.name
             binding.textViewProductPrice.text = "₴${product.price}"
 
-            // Set a placeholder image from resources instead of loading from URL
-            binding.imageViewProduct.setImageResource(R.drawable.placeholder_image)
+            // Convert Base64 string to Bitmap and display
+            try {
+                if (product.imageUrl.isNotEmpty()) {
+                    val imageBytes = Base64.decode(product.imageUrl, Base64.DEFAULT)
+                    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                    binding.imageViewProduct.setImageBitmap(bitmap)
+                } else {
+                    // Use placeholder if no image URL is provided
+                    binding.imageViewProduct.setImageResource(R.drawable.placeholder_image)
+                }
+            } catch (e: Exception) {
+                // In case of error (invalid Base64 string, etc), use placeholder
+                binding.imageViewProduct.setImageResource(R.drawable.placeholder_image)
+            }
 
             // Set click listener
             binding.root.setOnClickListener {

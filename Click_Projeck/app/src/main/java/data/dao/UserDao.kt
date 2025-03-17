@@ -28,4 +28,7 @@ interface UserDao {
 
     @Query("UPDATE users SET isAdmin = 1 WHERE id = :userId")
     suspend fun setUserAsAdmin(userId: Int)
+
+    @Query("UPDATE users SET isAdmin = :isAdmin WHERE id = :userId")
+    suspend fun updateUserRole(userId: Int, isAdmin: Boolean)
 }

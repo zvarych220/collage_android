@@ -36,6 +36,8 @@ class EditProfile : Fragment() {
     private var currentUserEmail: String = ""
     private var currentUserAbout: String = ""
     private var currentUserDob: String = ""
+    private var isCurrentUserAdmin = false
+    private var editingUserIsAdmin = false
 
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -87,6 +89,8 @@ class EditProfile : Fragment() {
             currentUserEmail = userDetails[SessionManager.KEY_USER_EMAIL] ?: ""
         }
 
+        // Перевірка прав адміна
+        checkAdminStatus()
         loadUserData()
 
         binding.cameraButton.setOnClickListener {
@@ -118,10 +122,23 @@ class EditProfile : Fragment() {
         }
     }
 
+    private fun checkAdminStatus() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val currentUser = db.userDao().getUserByEmail(currentUserEmail)
+            isCurrentUserAdmin = currentUser?.isAdmin ?: false
+
+            withContext(Dispatchers.Main) {
+                // Показати RadioGroup тільки адмінам
+                binding.roleRadioGroup.visibility = if (isCurrentUserAdmin) View.VISIBLE else View.GONE
+            }
+        }
+    }
+
     private fun loadUserData() {
         if (currentUserEmail.isNotEmpty()) {
             lifecycleScope.launch(Dispatchers.IO) {
                 val user = db.userDao().getUserByEmail(currentUserEmail)
+                editingUserIsAdmin = user?.isAdmin ?: false
 
                 withContext(Dispatchers.Main) {
                     user?.let {
@@ -129,7 +146,7 @@ class EditProfile : Fragment() {
                         binding.editTextText2.setText(it.email)
                         binding.editTextText3.setText(it.password)
 
-                        // Зберігаємо додаткові дані користувача для використання пізніше
+                        // Зберігаємо додаткові дані користувача
                         currentUserAbout = it.about
                         currentUserDob = it.dob
 
@@ -139,8 +156,14 @@ class EditProfile : Fragment() {
                             val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
                             binding.profileImage.setImageBitmap(bitmap)
                         } ?: run {
-                            // Встановлюємо зображення за замовчуванням, якщо profileImage відсутній
+                            // Встановлюємо зображення за замовчуванням
                             binding.profileImage.setImageResource(R.drawable.ic_profile)
+                        }
+
+                        // Оновлення радіо-кнопок
+                        if (isCurrentUserAdmin) {
+                            binding.adminRadio.isChecked = editingUserIsAdmin
+                            binding.userRadio.isChecked = !editingUserIsAdmin
                         }
                     } ?: run {
                         // Якщо користувача не знайдено
@@ -217,15 +240,23 @@ class EditProfile : Fragment() {
                     Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT)
                 }
 
+                // Перевірка прав перед зміною ролі
+                val newRoleIsAdmin = if (isCurrentUserAdmin) {
+                    binding.adminRadio.isChecked // Дозволити зміну тільки адмінам
+                } else {
+                    currentUser.isAdmin // Зберегти поточну роль
+                }
+
                 // Створення оновленого користувача
                 val updatedUser = User(
                     id = currentUser.id,
                     name = newNickname,
                     email = newEmail,
                     password = newPassword,
-                    about = currentUserAbout,  // Зберігаємо існуючі значення для about
-                    dob = currentUserDob,      // Зберігаємо існуючі значення для dob
-                    profileImage = profileImageString ?: currentUser.profileImage
+                    about = currentUserAbout,
+                    dob = currentUserDob,
+                    profileImage = profileImageString ?: currentUser.profileImage,
+                    isAdmin = newRoleIsAdmin
                 )
 
                 // Видалення старого запису, якщо email змінився
@@ -237,14 +268,11 @@ class EditProfile : Fragment() {
                 db.userDao().insertUser(updatedUser)
 
                 // Оновлення сесії з новими даними
-
-                // Якщо картинка змінилася, зберігаємо її у SharedPreferences також
-                profileImageString?.let {
-                    requireActivity().getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
-                        .edit()
-                        .putString("profileImage", it)
-                        .apply()
-                }
+                sessionManager.saveUserDetails(
+                    updatedUser.name,
+                    updatedUser.email,
+                    updatedUser.isAdmin
+                )
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(context, "Дані успішно оновлено", Toast.LENGTH_SHORT).show()
@@ -290,4 +318,5 @@ class EditProfile : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

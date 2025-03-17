@@ -59,22 +59,20 @@ class ProfileFragment : Fragment() {
     }
 
     private fun loadUserData() {
-        // Перевіряємо, чи користувач увійшов у систему через sessionManager
         if (sessionManager.isLoggedIn()) {
             val userDetails = sessionManager.getUserDetails()
             val currentUserEmail = userDetails[SessionManager.KEY_USER_EMAIL] ?: ""
 
             if (currentUserEmail.isNotEmpty()) {
-                // Завантаження даних користувача з бази даних
                 lifecycleScope.launch(Dispatchers.IO) {
                     val user = db.userDao().getUserByEmail(currentUserEmail)
 
                     withContext(Dispatchers.Main) {
                         if (user != null) {
-                            setText(binding.etEmail, user.email)
-                            setText(binding.etNickname, user.name)
-                            setText(binding.etAbout, user.about)
-                            setText(binding.etDateOfBirth, user.dob)
+                            binding.tvEmail.text = user.email
+                            binding.tvNickname.text = user.name
+                            binding.tvAbout.text = user.about
+                            binding.tvDateOfBirth.text = user.dob
 
                             // Перевірка, чи користувач є адміністратором
                             isAdmin = user.isAdmin
@@ -95,6 +93,8 @@ class ProfileFragment : Fragment() {
         }
     }
 
+
+
     private fun checkAndSetFirstUserAsAdmin(user: data.User) {
         if (user.isAdmin) return // Вже адміністратор, нічого робити не потрібно
 
@@ -112,14 +112,14 @@ class ProfileFragment : Fragment() {
             }
         }
     }
-
     private fun setDefaultUserInfo() {
-        setText(binding.etEmail, "Email: Not available")
-        setText(binding.etNickname, "Nickname: Not available")
-        setText(binding.etAbout, "About: Not available")
-        setText(binding.etDateOfBirth, "Date of Birth: Not available")
+        binding.tvEmail.text = "Email: Not available"
+        binding.tvNickname.text = "Nickname: Not available"
+        binding.tvAbout.text = "About: Not available"
+        binding.tvDateOfBirth.text = "Date of Birth: Not available"
         binding.btnAdminPanel.visibility = View.GONE
     }
+
 
     private fun setText(editText: com.google.android.material.textfield.TextInputEditText, text: String) {
         editText.text = Editable.Factory.getInstance().newEditable(text)

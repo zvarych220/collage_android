@@ -16,7 +16,12 @@ class SessionManager(context: Context) {
 
 
     }
-
+    fun saveUserDetails(name: String, email: String, isAdmin: Boolean) {
+        editor.putString(KEY_USER_NAME, name)
+        editor.putString(KEY_USER_EMAIL, email)
+        editor.putBoolean(KEY_IS_ADMIN, isAdmin)
+        editor.apply()
+    }
     fun createSession(email: String, name: String,  isAdmin: Boolean) {
         editor.putBoolean(KEY_IS_LOGGED_IN, true)
         editor.putString(KEY_USER_EMAIL, email)
