@@ -10,7 +10,7 @@ import data.dao.OrderDao
 import data.dao.ProductDao
 import data.dao.UserDao
 
-@Database(entities = [User::class, Product::class, Order::class], version = 6) // Збільшено версію до 6
+@Database(entities = [User::class, Product::class, Order::class,], version = 8)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun productDao(): ProductDao
@@ -27,7 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,MIGRATION_6_7, MIGRATION_7_8)
                     .build()
                 INSTANCE = instance
                 instance
@@ -95,5 +95,29 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE products ADD COLUMN allImages TEXT NOT NULL DEFAULT '[]'")
             }
         }
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS cart_items (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        userId INTEGER NOT NULL,
+                        productId INTEGER NOT NULL,
+                        quantity INTEGER NOT NULL,
+                        price REAL NOT NULL,
+                        FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+                        FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
+                    )
+                """)
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_cart_items_userId ON cart_items(userId)")
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_cart_items_productId ON cart_items(productId)")
+            }
+        }
+        val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE IF EXISTS cart_items")
+            }
+        }
+
+
     }
 }

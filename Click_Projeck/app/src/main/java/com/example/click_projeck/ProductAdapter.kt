@@ -1,10 +1,10 @@
 package com.example.click_projeck
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -48,9 +48,22 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
                 binding.imageViewProduct.setImageResource(R.drawable.placeholder_image)
             }
 
-            // Set click listener
+            // Set click listener to navigate to product detail
             binding.root.setOnClickListener {
-                // Handle item click (navigate to detail, etc.)
+                product.id?.let { productId ->
+                    // Navigate from ProductFragment to ProductDetailFragment
+                    if (binding.root.findNavController().currentDestination?.id == R.id.productFragment) {
+                        binding.root.findNavController().navigate(
+                            ProductFragmentDirections.actionProductFragmentToProductDetailFragment(productId)
+                        )
+                    }
+                    // Navigate from ProductListFragment to ProductDetailFragment
+                    else if (binding.root.findNavController().currentDestination?.id == R.id.productListFragment) {
+                        binding.root.findNavController().navigate(
+                            ProductListFragmentDirections.actionProductListFragmentToProductDetailFragment(productId)
+                        )
+                    }
+                }
             }
         }
     }
