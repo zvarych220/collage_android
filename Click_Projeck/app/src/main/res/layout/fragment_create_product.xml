@@ -41,7 +41,7 @@
                 android:gravity="center"/>
         </LinearLayout>
 
-        <!-- Додані елементи для фото товару -->
+        <!-- Оновлений блок для декількох фото товару -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,14 +49,32 @@
             android:gravity="center"
             android:layout_marginBottom="24dp">
 
-            <!-- Зображення товару -->
-            <ImageView
-                android:id="@+id/productImage"
-                android:layout_width="200dp"
+            <!-- ViewPager для прокрутки фотографій -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/imageViewPager"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/image_placeholder_background"
-                android:visibility="gone"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone"/>
+
+            <!-- Індикатор для фотографій -->
+            <LinearLayout
+                android:id="@+id/dotsIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"/>
+
+            <!-- Текст, якщо немає фотографій -->
+            <TextView
+                android:id="@+id/tvNoImages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No images added"
+                android:textSize="16sp"
+                android:textColor="@color/gray"
                 android:layout_marginBottom="16dp"/>
 
             <!-- Кнопки для камери та галереї -->
@@ -138,7 +156,7 @@
                 android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Приховане поле для URL зображення (зберігає Base64) -->
+        <!-- Приховане поле для збереження даних головного зображення -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

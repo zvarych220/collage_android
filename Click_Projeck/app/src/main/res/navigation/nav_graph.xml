@@ -99,4 +99,32 @@
         android:label="Create Product"
         tools:layout="@layout/fragment_create_product" />
 
+
+    <!-- Додайте ці дії до відповідних фрагментів у nav_graph.xml -->
+    <fragment
+        android:id="@+id/productListFragment"
+        android:name="com.example.click_projeck.ProductListFragment"
+        android:label="ProductListFragment">
+        <action
+            android:id="@+id/actionProductListFragmentToProductDetailFragment"
+            app:destination="@id/productDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.example.click_projeck.ProductFragment"
+        android:label="ProductFragment">
+        <action
+            android:id="@+id/actionProductFragmentToProductDetailFragment"
+            app:destination="@id/productDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.example.click_projeck.ProductDetailFragment"
+        android:label="ProductDetailFragment">
+        <argument
+            android:name="productId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

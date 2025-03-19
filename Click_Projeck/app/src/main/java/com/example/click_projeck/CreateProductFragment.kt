@@ -9,11 +9,15 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.example.click_projeck.databinding.FragmentCreateProductBinding
 import data.AppDatabase
 import data.Product
@@ -24,7 +28,9 @@ class CreateProductFragment : Fragment() {
     private var _binding: FragmentCreateProductBinding? = null
     private val binding get() = _binding!!
 
-    private var productImageBitmap: Bitmap? = null
+    // Список для зберігання фотографій продукту
+    private val productImages = mutableListOf<ProductImage>()
+    private lateinit var imageAdapter: ProductImageAdapter
 
     // Реєстрація для результатів активності камери
     private val cameraLauncher = registerForActivityResult(
@@ -33,13 +39,7 @@ class CreateProductFragment : Fragment() {
         if (result.resultCode == Activity.RESULT_OK) {
             val image = result.data?.extras?.get("data") as? Bitmap
             image?.let {
-                binding.productImage.setImageBitmap(it)
-                binding.productImage.visibility = View.VISIBLE
-                productImageBitmap = it
-
-                // Конвертуємо зображення в Base64 для збереження
-                val imageBase64 = convertBitmapToBase64(it)
-                binding.etProductImageUrl.setText(imageBase64)
+                addProductImage(it)
             }
         }
     }
@@ -56,13 +56,7 @@ class CreateProductFragment : Fragment() {
                         requireActivity().contentResolver,
                         it
                     )
-                    binding.productImage.setImageBitmap(bitmap)
-                    binding.productImage.visibility = View.VISIBLE
-                    productImageBitmap = bitmap
-
-                    // Конвертуємо зображення в Base64 для збереження
-                    val imageBase64 = convertBitmapToBase64(bitmap)
-                    binding.etProductImageUrl.setText(imageBase64)
+                    addProductImage(bitmap)
                 } catch (e: Exception) {
                     Toast.makeText(context, "Error loading image: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
@@ -81,6 +75,9 @@ class CreateProductFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Ініціалізація адаптера та ViewPager2
+        initImageViewPager()
 
         // Налаштування обробників подій для кнопок
         binding.btnSaveProduct.setOnClickListener {
@@ -106,6 +103,128 @@ class CreateProductFragment : Fragment() {
         }
     }
 
+    private fun initImageViewPager() {
+        imageAdapter = ProductImageAdapter(
+            productImages,
+            onDeleteClick = { position ->
+                deleteProductImage(position)
+            },
+            onMainImageClick = { position ->
+                setMainImage(position)
+            }
+        )
+
+        binding.imageViewPager.apply {
+            adapter = imageAdapter
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    updateDotsIndicator(position)
+                }
+            })
+        }
+    }
+
+    private fun addProductImage(bitmap: Bitmap) {
+        val base64 = convertBitmapToBase64(bitmap)
+        // Якщо це перше зображення, робимо його головним
+        val isMain = productImages.isEmpty()
+
+        productImages.add(ProductImage(bitmap, base64, isMain))
+
+        // Оновлюємо UI
+        updateImagesUI()
+
+        // Оновлюємо поле для збереження URL головного зображення
+        updateMainImageUrl()
+    }
+
+    private fun deleteProductImage(position: Int) {
+        val wasMain = productImages[position].isMain
+        productImages.removeAt(position)
+
+        // Якщо видалене зображення було головним і є інші зображення,
+        // встановлюємо інше як головне
+        if (wasMain && productImages.isNotEmpty()) {
+            productImages[0].isMain = true
+        }
+
+        // Оновлюємо UI
+        updateImagesUI()
+
+        // Оновлюємо поле для збереження URL головного зображення
+        updateMainImageUrl()
+    }
+
+    private fun setMainImage(position: Int) {
+        productImages.forEach { it.isMain = false }
+        productImages[position].isMain = true
+
+        // Оновлення URL головного фото
+        binding.etProductImageUrl.setText(productImages[position].base64)
+
+        // Оновлення адаптера
+        imageAdapter.notifyDataSetChanged()
+    }
+
+    private fun updateImagesUI() {
+        if (productImages.isEmpty()) {
+            binding.imageViewPager.visibility = View.GONE
+            binding.dotsIndicator.visibility = View.GONE
+            binding.tvNoImages.visibility = View.VISIBLE
+        } else {
+            binding.imageViewPager.visibility = View.VISIBLE
+            binding.dotsIndicator.visibility = View.VISIBLE
+            binding.tvNoImages.visibility = View.GONE
+
+            // Оновлюємо адаптер
+            imageAdapter.notifyDataSetChanged()
+
+            // Оновлюємо індикатор точок
+            createDotsIndicator()
+            updateDotsIndicator(binding.imageViewPager.currentItem)
+        }
+    }
+
+    private fun createDotsIndicator() {
+        binding.dotsIndicator.removeAllViews()
+
+        for (i in productImages.indices) {
+            val dot = ImageView(context)
+            dot.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.dot_indicator_inactive
+                )
+            )
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(8, 0, 8, 0)
+            dot.layoutParams = params
+
+            binding.dotsIndicator.addView(dot)
+        }
+    }
+
+    private fun updateDotsIndicator(position: Int) {
+        for (i in 0 until binding.dotsIndicator.childCount) {
+            val dot = binding.dotsIndicator.getChildAt(i) as ImageView
+            dot.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    if (i == position) R.drawable.dot_indicator_active else R.drawable.dot_indicator_inactive
+                )
+            )
+        }
+    }
+
+    private fun updateMainImageUrl() {
+        val mainImage = productImages.find { it.isMain }
+        binding.etProductImageUrl.setText(mainImage?.base64 ?: "")
+    }
+
     // Функція для конвертації Bitmap в Base64
     private fun convertBitmapToBase64(bitmap: Bitmap): String {
         val byteArrayOutputStream = ByteArrayOutputStream()
@@ -121,7 +240,12 @@ class CreateProductFragment : Fragment() {
         val imageUrl = binding.etProductImageUrl.text.toString().trim()
         val category = binding.etProductCategory.text.toString().trim()
 
-        if (name.isEmpty() || description.isEmpty() || priceStr.isEmpty() || imageUrl.isEmpty() || category.isEmpty()) {
+        if (productImages.isEmpty()) {
+            Toast.makeText(requireContext(), "Please add at least one image", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (name.isEmpty() || description.isEmpty() || priceStr.isEmpty() || category.isEmpty()) {
             Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
             return
         }
@@ -133,15 +257,18 @@ class CreateProductFragment : Fragment() {
             return
         }
 
-        binding.progressBar.visibility = View.VISIBLE
-        binding.btnSaveProduct.isEnabled = false
+        // Перетворення списку фото в JSON
+        val allImagesJson = productImages.joinToString(",", "[", "]") {
+            """{"base64":"${it.base64}","isMain":${it.isMain}}"""
+        }
 
         val product = Product(
             name = name,
             description = description,
             price = price,
-            imageUrl = imageUrl,
-            category = category
+            imageUrl = imageUrl, // Головне фото
+            category = category,
+            allImages = allImagesJson // Усі фото
         )
 
         lifecycleScope.launch {

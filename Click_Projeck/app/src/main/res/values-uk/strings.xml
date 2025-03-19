@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="product_image">Product Image</string>
+
+
     <string name="app_name">Click_Projeck</string>
     <string name="btn_name">Натисни</string>
     <string name="title_name">Натисни кнопку</string>
