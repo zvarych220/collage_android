@@ -127,4 +127,8 @@
             android:name="productId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.click_projeck.CartFragment"
+        android:label="CartFragment" />
 </navigation>

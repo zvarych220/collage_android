@@ -6,15 +6,18 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import data.dao.CartDao
 import data.dao.OrderDao
 import data.dao.ProductDao
 import data.dao.UserDao
 
-@Database(entities = [User::class, Product::class, Order::class,], version = 8)
+@Database(entities = [User::class, Product::class, Order::class,CartItem::class], version = 9)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun productDao(): ProductDao
     abstract fun orderDao(): OrderDao
+    abstract fun cartDao(): CartDao // Додаємо CartDao
+
 
     companion object {
         @Volatile
@@ -27,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,MIGRATION_6_7, MIGRATION_7_8)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,MIGRATION_6_7, MIGRATION_7_8,MIGRATION_8_9)
                     .build()
                 INSTANCE = instance
                 instance
@@ -117,7 +120,20 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("DROP TABLE IF EXISTS cart_items")
             }
         }
-
+        val MIGRATION_8_9 = object : Migration(8, 9) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+            CREATE TABLE IF NOT EXISTS cart_items (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                userId INTEGER NOT NULL,
+                productId INTEGER NOT NULL,
+                quantity INTEGER NOT NULL,
+                FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
+            )
+        """)
+            }
+        }
 
     }
 }

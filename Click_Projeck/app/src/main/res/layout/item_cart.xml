@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="8dp"
+    android:layout_marginBottom="8dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
@@ -14,7 +14,7 @@
         android:padding="12dp">
 
         <ImageView
-            android:id="@+id/imageViewProduct"
+            android:id="@+id/ivProductImage"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:scaleType="centerCrop"
@@ -33,8 +33,8 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/btnRemove"
-            app:layout_constraintStart_toEndOf="@+id/imageViewProduct"
+            app:layout_constraintEnd_toStartOf="@id/btnRemove"
+            app:layout_constraintStart_toEndOf="@id/ivProductImage"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Product Name" />
 
@@ -45,22 +45,22 @@
             android:layout_marginTop="4dp"
             android:textColor="@color/black"
             android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@+id/tvProductName"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductName"
-            tools:text="₴1999.99" />
+            app:layout_constraintStart_toStartOf="@id/tvProductName"
+            app:layout_constraintTop_toBottomOf="@id/tvProductName"
+            tools:text="₴999.99" />
 
         <LinearLayout
             android:id="@+id/quantityLayout"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="@+id/tvPrice"
-            app:layout_constraintTop_toBottomOf="@+id/tvPrice">
+            app:layout_constraintStart_toStartOf="@id/tvProductName"
+            app:layout_constraintTop_toBottomOf="@id/tvPrice">
 
             <ImageButton
-                android:id="@+id/btnDecreaseQuantity"
+                android:id="@+id/btnDecrease"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -71,13 +71,13 @@
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="1"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="2" />
 
             <ImageButton
-                android:id="@+id/btnIncreaseQuantity"
+                android:id="@+id/btnIncrease"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -85,35 +85,23 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvSubtotalLabel"
+            android:id="@+id/tvItemTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Subtotal:"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/quantityLayout"
-            app:layout_constraintEnd_toStartOf="@+id/tvSubtotal"
-            app:layout_constraintTop_toTopOf="@+id/quantityLayout" />
-
-        <TextView
-            android:id="@+id/tvSubtotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/tvSubtotalLabel"
+            app:layout_constraintBottom_toBottomOf="@id/quantityLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvSubtotalLabel"
-            tools:text="₴1999.99" />
+            app:layout_constraintTop_toTopOf="@id/quantityLayout"
+            tools:text="₴1999.98" />
 
         <ImageButton
             android:id="@+id/btnRemove"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

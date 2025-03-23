@@ -40,8 +40,7 @@ class ProductImageAdapter(
             if (holder.mainImageCheckbox.isChecked) {
                 onMainImageClick(position)
             } else {
-                // If the user unchecks the main image, we should re-check it
-                // since we need to have a main image
+
                 holder.mainImageCheckbox.isChecked = true
             }
         }
@@ -50,7 +49,6 @@ class ProductImageAdapter(
     override fun getItemCount() = images.size
 }
 
-// Data class to represent a product image
 data class ProductImage(
     val bitmap: Bitmap,
     val base64: String,
