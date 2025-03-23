@@ -33,10 +33,12 @@ class CartAdapter(
     inner class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvProductName: TextView = itemView.findViewById(R.id.tvProductName)
         private val tvQuantity: TextView = itemView.findViewById(R.id.tvQuantity)
-        private val ivProductImage: ImageView = itemView.findViewById(R.id.ivProductImage) // Додано ImageView
+        private val ivProductImage: ImageView = itemView.findViewById(R.id.ivProductImage)
         private val btnIncrease: ImageView = itemView.findViewById(R.id.btnIncrease)
         private val btnDecrease: ImageView = itemView.findViewById(R.id.btnDecrease)
         private val btnRemove: ImageView = itemView.findViewById(R.id.btnRemove)
+        private val tvPricePerItem: TextView = itemView.findViewById(R.id.tvPricePerItem) // Додано
+        private val tvTotalPrice: TextView = itemView.findViewById(R.id.tvTotalPrice) // Додано
 
         fun bind(cartItemWithDetails: CartFragment.CartItemWithDetails) {
             val cartItem = cartItemWithDetails.cartItem
@@ -45,6 +47,17 @@ class CartAdapter(
             // Встановлення даних
             tvProductName.text = product?.name ?: "Товар ID: ${cartItem.productId}"
             tvQuantity.text = cartItem.quantity.toString()
+
+            // Встановлення ціни за одну одиницю товару
+            product?.let {
+                tvPricePerItem.text = "₴${it.price} за шт."
+            }
+
+            // Встановлення загальної ціни за всі одиниці товару
+            product?.let {
+                val totalPrice = it.price * cartItem.quantity
+                tvTotalPrice.text = "₴${String.format("%.2f", totalPrice)}"
+            }
 
             // Встановлення зображення товару
             product?.let {

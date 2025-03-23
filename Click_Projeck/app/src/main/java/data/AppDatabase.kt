@@ -11,7 +11,7 @@ import data.dao.OrderDao
 import data.dao.ProductDao
 import data.dao.UserDao
 
-@Database(entities = [User::class, Product::class, Order::class,CartItem::class], version = 9)
+@Database(entities = [User::class, Product::class, Order::class,CartItem::class, OrderItem::class], version = 10)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun productDao(): ProductDao
@@ -30,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,MIGRATION_6_7, MIGRATION_7_8,MIGRATION_8_9)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,MIGRATION_6_7, MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10)
                     .build()
                 INSTANCE = instance
                 instance
@@ -134,6 +134,20 @@ abstract class AppDatabase : RoomDatabase() {
         """)
             }
         }
-
+        val MIGRATION_9_10 = object : Migration(9, 10) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS order_items (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        orderId INTEGER NOT NULL,
+                        productId INTEGER NOT NULL,
+                        quantity INTEGER NOT NULL,
+                        pricePerItem REAL NOT NULL,
+                        FOREIGN KEY (orderId) REFERENCES orders(id) ON DELETE CASCADE,
+                        FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
+                    )
+                """)
+            }
+        }
     }
 }

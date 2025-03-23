@@ -119,60 +119,20 @@
             app:layout_constraintTop_toBottomOf="@id/tvDescriptionLabel"
             tools:text="Product description text goes here. This can be a long text with multiple lines describing all the features and benefits of the product." />
 
-        <LinearLayout
-            android:id="@+id/quantityLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/tvDescription">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Quantity:"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/btnDecreaseQuantity"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="16dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_delete" />
-
-            <TextView
-                android:id="@+id/tvQuantity"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="1"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/btnIncreaseQuantity"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_add" />
-        </LinearLayout>
-
         <Button
             android:id="@+id/btnAddToCart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="40dp"
             android:background="@color/design_default_color_primary"
             android:padding="16dp"
             android:text="Add to Cart"
             android:textColor="@android:color/white"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/quantityLayout" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
