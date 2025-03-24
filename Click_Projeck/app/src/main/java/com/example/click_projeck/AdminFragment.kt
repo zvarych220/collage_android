@@ -29,6 +29,7 @@ class AdminFragment : Fragment() {
         }
 
         binding.btnManageUsers.setOnClickListener {
+            findNavController().navigate(R.id.action_adminFragment_to_userListFragment)
         }
 
         binding.btnSystemSettings.setOnClickListener {

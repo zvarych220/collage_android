@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_adminFragment_to_productManagementFragment"
             app:destination="@id/productManagementFragment" />
+        <action
+            android:id="@+id/action_adminFragment_to_userListFragment2"
+            app:destination="@id/userListFragment" />
     </fragment>
 
     <action
@@ -131,4 +134,32 @@
         android:id="@+id/cartFragment"
         android:name="com.example.click_projeck.CartFragment"
         android:label="CartFragment" />
+
+
+    <!-- Inside the navigation element -->
+
+
+    <fragment
+        android:id="@+id/userDetailFragment"
+        android:name="com.example.click_projeck.UserDetailFragment"
+        android:label="User Details"
+        tools:layout="@layout/fragment_user_detail">
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+    </fragment>
+
+    <!-- Add this action to adminFragment -->
+    <action
+        android:id="@+id/action_adminFragment_to_userListFragment"
+        app:destination="@id/userListFragment" />
+
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.example.click_projeck.UserListFragment"
+        android:label="User List">
+        <action
+            android:id="@+id/action_userListFragment_to_userDetailFragment"
+            app:destination="@id/userDetailFragment" />
+    </fragment>
 </navigation>
