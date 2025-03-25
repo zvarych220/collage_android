@@ -6,8 +6,12 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "orders")
 data class Order(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
-    val userId: Int, // ID користувача, який зробив замовлення
-    val totalAmount: Double, // Загальна сума замовлення
-    val status: String = "Обробка", // Статус замовлення (по дефолту "Обробка")
-    val createdAt: String // Дата створення замовлення
+    val userId: Int,
+    val totalAmount: Double,
+    val status: String = "Обробка",
+    val createdAt: String,
+    val recipientName: String,
+    val phoneNumber: String,
+    val deliveryAddress: String,
+    val paymentMethod: String
 )

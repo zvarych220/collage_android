@@ -8,4 +8,13 @@
     <color name="gray">#757575</color>
     <color name="gray_light">#F5F5F5</color>
     <color name="red">#FF0000</color>
+
+
+    <color name="cardBackground">#FFFFFF</color>
+    <color name="textPrimary">#212121</color>
+    <color name="textSecondary">#757575</color>
+    <color name="statusColor">#1976D2</color> <!-- Синій для статусу -->
+    <color name="totalColor">#388E3C</color> <!-- Зелений для суми -->
+    <color name="dateColor">#616161</color> <!-- Сірий для дати -->
+    <color name="cardShadow">#E0E0E0</color> <!-- Тінь для картки -->
 </resources>

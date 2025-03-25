@@ -17,4 +17,13 @@ interface OrderDao {
 
     @Query("SELECT * FROM order_items WHERE orderId = :orderId")
     suspend fun getOrderItems(orderId: Int): List<OrderItem>
+
+    @Query("SELECT * FROM orders ORDER BY createdAt DESC")
+    suspend fun getAllOrders(): List<Order>
+    @Query("SELECT * FROM orders WHERE id = :orderId LIMIT 1")
+    suspend fun getOrderById(orderId: Int): Order?
+
+    @Update
+    suspend fun updateOrder(order: Order)
+
 }

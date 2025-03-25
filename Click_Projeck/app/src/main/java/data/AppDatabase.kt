@@ -11,7 +11,7 @@ import data.dao.OrderDao
 import data.dao.ProductDao
 import data.dao.UserDao
 
-@Database(entities = [User::class, Product::class, Order::class,CartItem::class, OrderItem::class], version = 10)
+@Database(entities = [User::class, Product::class, Order::class,CartItem::class, OrderItem::class], version = 11)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun productDao(): ProductDao
@@ -30,7 +30,16 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6,MIGRATION_6_7, MIGRATION_7_8,MIGRATION_8_9,MIGRATION_9_10)
+                    .addMigrations(MIGRATION_1_2,
+                        MIGRATION_2_3,
+                        MIGRATION_3_4,
+                        MIGRATION_4_5,
+                        MIGRATION_5_6,
+                        MIGRATION_6_7,
+                        MIGRATION_7_8,
+                        MIGRATION_8_9,
+                        MIGRATION_9_10,
+                        MIGRATION_10_11)
                     .build()
                 INSTANCE = instance
                 instance
@@ -147,6 +156,15 @@ abstract class AppDatabase : RoomDatabase() {
                         FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
                     )
                 """)
+            }
+        }
+        val MIGRATION_10_11 = object : Migration(10, 11) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Додаємо нові поля до таблиці orders
+                database.execSQL("ALTER TABLE orders ADD COLUMN recipientName TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE orders ADD COLUMN phoneNumber TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE orders ADD COLUMN deliveryAddress TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE orders ADD COLUMN paymentMethod TEXT NOT NULL DEFAULT 'Наложений платіж'")
             }
         }
     }

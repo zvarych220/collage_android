@@ -71,12 +71,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Додамо метод для виходу з облікового запису
-   /* fun logout() {
-        sessionManager.logout()
-        // Перезавантажуємо граф навігації, щоб повернутися до loginFragment
-        navGraph.setStartDestination(R.id.loginFragment)
-        navController.graph = navGraph
-        }*/
 
 }

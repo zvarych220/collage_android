@@ -136,6 +136,40 @@ class CartFragment : Fragment() {
         }
     }
     private fun checkout() {
+        val cartItemsWithDetails = cartAdapter.currentList
+        if (cartItemsWithDetails.isEmpty()) {
+            Toast.makeText(requireContext(), "Кошик порожній", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val totalAmount = cartItemsWithDetails.sumOf { cartItemWithDetails ->
+            val product = cartItemWithDetails.product
+            val cartItem = cartItemWithDetails.cartItem
+            (product?.price ?: 0.0) * cartItem.quantity
+        }
+
+        CheckoutDialog(
+            requireContext(),
+            totalAmount,
+            onOrderConfirmed = { recipientName, phoneNumber, deliveryAddress, paymentMethod, cardDetails ->
+                processOrder(
+                    recipientName,
+                    phoneNumber,
+                    deliveryAddress,
+                    paymentMethod,
+                    cardDetails
+                )
+            }
+        ).show()
+    }
+
+    private fun processOrder(
+        recipientName: String,
+        phoneNumber: String,
+        deliveryAddress: String,
+        paymentMethod: String,
+        cardDetails: CheckoutDialog.CardDetails?
+    ) {
         lifecycleScope.launch {
             try {
                 val sessionManager = SessionManager(requireContext())
@@ -163,21 +197,26 @@ class CartFragment : Fragment() {
                 val productDao = AppDatabase.getInstance(requireContext()).productDao()
                 val orderDao = AppDatabase.getInstance(requireContext()).orderDao()
 
-                // Розрахунок загальної суми замовлення
+                // Calculate total amount
                 val totalAmount = cartItems.sumOf { cartItem ->
                     val product = productDao.getProductById(cartItem.productId)
                     (product?.price ?: 0.0) * cartItem.quantity
                 }
 
-                // Створення замовлення
+                // Create order with additional info
                 val order = Order(
                     userId = user.id!!,
                     totalAmount = totalAmount,
-                    createdAt = System.currentTimeMillis().toString()
+                    status = "Обробка",
+                    createdAt = System.currentTimeMillis().toString(),
+                    recipientName = recipientName,
+                    phoneNumber = phoneNumber,
+                    deliveryAddress = deliveryAddress,
+                    paymentMethod = paymentMethod
                 )
                 val orderId = orderDao.insertOrder(order)
 
-                // Додавання товарів до замовлення
+                // Add order items
                 cartItems.forEach { cartItem ->
                     val product = productDao.getProductById(cartItem.productId)
                     if (product != null) {
@@ -191,11 +230,11 @@ class CartFragment : Fragment() {
                     }
                 }
 
-                // Очищення кошика після оформлення замовлення
+                // Clear cart
                 cartDao.clearCart(user.id!!)
 
                 Toast.makeText(requireContext(), "Замовлення успішно оформлено", Toast.LENGTH_SHORT).show()
-                loadCartItems() // Оновлення списку товарів у кошику
+                loadCartItems()
             } catch (e: Exception) {
                 Log.e("CartFragment", "Помилка при оформленні замовлення", e)
                 Toast.makeText(requireContext(), "Помилка при оформленні замовлення", Toast.LENGTH_SHORT).show()

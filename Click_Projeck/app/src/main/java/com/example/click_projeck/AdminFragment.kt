@@ -34,6 +34,10 @@ class AdminFragment : Fragment() {
 
         binding.btnSystemSettings.setOnClickListener {
         }
+        // Add this to onViewCreated in AdminFragment
+        binding.btnManageOrders.setOnClickListener {
+            findNavController().navigate(R.id.action_adminFragment_to_orderManagementFragment)
+        }
     }
 
     override fun onDestroyView() {

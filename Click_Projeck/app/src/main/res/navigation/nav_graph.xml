@@ -162,4 +162,34 @@
             android:id="@+id/action_userListFragment_to_userDetailFragment"
             app:destination="@id/userDetailFragment" />
     </fragment>
+
+
+
+    <action
+        android:id="@+id/action_adminFragment_to_orderManagementFragment"
+        app:destination="@id/orderManagementFragment" />
+
+    <action
+        android:id="@+id/action_orderManagementFragment_to_orderDetailFragment"
+        app:destination="@id/orderDetailFragment" />
+
+    <fragment
+        android:id="@+id/orderManagementFragment"
+        android:name="com.example.click_projeck.OrderManagementFragment"
+        android:label="Order Management"
+        tools:layout="@layout/fragment_order_management">
+        <action
+            android:id="@+id/action_orderManagementFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/orderDetailFragment"
+        android:name="com.example.click_projeck.OrderDetailFragment"
+        android:label="Order Details"
+        tools:layout="@layout/fragment_order_detail">
+        <argument
+            android:name="order_id"
+            app:argType="integer" />
+    </fragment>
 </navigation>
