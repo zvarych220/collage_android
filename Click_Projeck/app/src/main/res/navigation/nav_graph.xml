@@ -192,4 +192,13 @@
             android:name="order_id"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/editProductFragment"
+        android:name="com.example.click_projeck.EditProductFragment"
+        android:label="Edit Product"
+        tools:layout="@layout/fragment_edit_product">
+        <argument
+            android:name="productId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

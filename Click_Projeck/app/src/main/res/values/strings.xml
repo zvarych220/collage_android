@@ -43,4 +43,9 @@
     <string name="delete_user">Delete User</string>
 
 
+    <string name="no_orders_found">У вас ще немає замовлень</string>
+    <string name="error_loading_orders">Помилка завантаження замовлень</string>
+    <string name="try_again">Спробувати знову</string>
+
+
 </resources>

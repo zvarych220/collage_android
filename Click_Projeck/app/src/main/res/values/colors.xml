@@ -9,6 +9,7 @@
     <color name="gray_light">#F5F5F5</color>
     <color name="red">#FF0000</color>
 
+    <color name="colorPrimary">#3F51B5</color> <!-- Приклад синього кольору -->
 
     <color name="cardBackground">#FFFFFF</color>
     <color name="textPrimary">#212121</color>
@@ -17,4 +18,10 @@
     <color name="totalColor">#388E3C</color> <!-- Зелений для суми -->
     <color name="dateColor">#616161</color> <!-- Сірий для дати -->
     <color name="cardShadow">#E0E0E0</color> <!-- Тінь для картки -->
+
+    <color name="green">#4CAF50</color>
+
+    <string name="product_list_title">Мої продукти</string>
+    <string name="no_products_found">Продуктів не знайдено</string>
+    <string name="add_first_product">Додати перший продукт</string>
 </resources>

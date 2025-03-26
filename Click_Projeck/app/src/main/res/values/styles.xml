@@ -3,5 +3,11 @@
     <style name="TextInputLayoutRoundedCorners">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
+
+
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
     </style>
 </resources>
