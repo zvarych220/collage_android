@@ -24,4 +24,31 @@
     <string name="product_list_title">Мої продукти</string>
     <string name="no_products_found">Продуктів не знайдено</string>
     <string name="add_first_product">Додати перший продукт</string>
+
+    <style name="OrderDetailTitle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="OrderDetailSectionTitle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="OrderDetailItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
+
+    <color name="light_gray_background">#F5F5F5</color>
+
+    <color name="dividerColor">#E0E0E0</color>
+
+
+    <color name="light_gray">#F5F5F5</color>
+    <color name="primary_color">#3F51B5</color>
+
 </resources>

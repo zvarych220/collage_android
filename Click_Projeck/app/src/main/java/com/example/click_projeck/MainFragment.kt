@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.click_projeck.databinding.FragmentMainBinding
 import data.AppDatabase
@@ -13,6 +15,7 @@ import data.Order
 import data.dao.OrderDao
 import data.dao.UserDao
 import kotlinx.coroutines.launch
+import androidx.navigation.fragment.findNavController
 
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
@@ -50,8 +53,12 @@ class MainFragment : Fragment() {
 
     private fun setupAdapter() {
         orderAdapter = OrderAdapter { order ->
-            // Обробка кліку на замовлення
-            // Можна додати навігацію до деталей замовлення
+            order.id?.let { id ->
+                findNavController().navigate(
+                    R.id.action_mainFragment_to_orderUserDetailFragment,
+                    bundleOf("order_id" to order.id) // Make sure 'order' is available in your scope
+                )
+            }
         }
 
         binding.ordersRecyclerView.apply {

@@ -58,11 +58,7 @@ class ProductAdapter : ListAdapter<Product, ProductAdapter.ProductViewHolder>(Pr
                         )
                     }
                     // Navigate from ProductListFragment to ProductDetailFragment
-                    else if (binding.root.findNavController().currentDestination?.id == R.id.productListFragment) {
-                        binding.root.findNavController().navigate(
-                            ProductListFragmentDirections.actionProductListFragmentToProductDetailFragment(productId)
-                        )
-                    }
+
                 }
             }
         }

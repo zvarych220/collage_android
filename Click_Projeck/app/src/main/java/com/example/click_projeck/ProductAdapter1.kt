@@ -1,6 +1,8 @@
 package com.example.click_projeck
 
 import android.graphics.BitmapFactory
+import android.os.Bundle
+import android.provider.Settings.Global.putInt
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,11 +34,8 @@ class ProductAdapter1 : ListAdapter<Product, ProductAdapter1.ProductViewHolder>(
         fun bind(product: Product) {
             binding.textViewProductName.text = product.name
             binding.textViewProductPrice.text = "₴${product.price}"
-
-            // Опціонально, якщо ви використовуєте опис
             binding.textViewProductDescription.text = product.description ?: ""
 
-            // Обробка зображення
             try {
                 if (product.imageUrl.isNotEmpty()) {
                     val imageBytes = Base64.decode(product.imageUrl, Base64.DEFAULT)
@@ -49,19 +48,18 @@ class ProductAdapter1 : ListAdapter<Product, ProductAdapter1.ProductViewHolder>(
                 binding.imageViewProduct.setImageResource(R.drawable.placeholder_image)
             }
 
-            // Обробка кліків
             binding.root.setOnClickListener {
                 product.id?.let { productId ->
-                    when (binding.root.findNavController().currentDestination?.id) {
-                        R.id.productFragment -> binding.root.findNavController().navigate(
-                            ProductFragmentDirections.actionProductFragmentToProductDetailFragment(productId)
-                        )
-                        R.id.productListFragment -> binding.root.findNavController().navigate(
-                            ProductListFragmentDirections.actionProductListFragmentToProductDetailFragment(productId)
-                        )
+                    val bundle = Bundle().apply {
+                        putInt("productId", productId)
                     }
+                    binding.root.findNavController().navigate(
+                        R.id.action_productListFragment_to_editProductFragment,
+                        bundle
+                    )
                 }
             }
+
         }
     }
 

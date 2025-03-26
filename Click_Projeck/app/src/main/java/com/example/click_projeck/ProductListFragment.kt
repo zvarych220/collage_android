@@ -55,8 +55,6 @@ class ProductListFragment : Fragment() {
     private fun setupClickListeners() {
         binding.btnBack.setOnClickListener {
         }
-
-
     }
 
     private fun loadProducts() {

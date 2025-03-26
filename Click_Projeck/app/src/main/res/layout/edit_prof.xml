@@ -3,123 +3,157 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    >
 
+    <!-- Profile Image -->
     <ImageView
         android:id="@+id/profileImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="32dp"
+        android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.107"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <!-- New Photo Button -->
+
+    <!-- Gallery Button -->
     <Button
         android:id="@+id/cameraButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="new photo"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#6200EE"
+        android:paddingHorizontal="24dp"
+        android:text="New Photo"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.275"
+        app:layout_constraintHorizontal_bias="0.191"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileImage" />
 
+    <!-- NickName EditText -->
     <Button
         android:id="@+id/galleryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:text="Garelly"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#6200EE"
+        android:paddingHorizontal="24dp"
+        android:text="Gallery"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/cameraButton"
         app:layout_constraintStart_toEndOf="@+id/cameraButton"
-        app:layout_constraintTop_toTopOf="@+id/cameraButton" />
+        app:layout_constraintTop_toTopOf="@+id/cameraButton"
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/editTextText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="NickName"
         android:inputType="text"
-        app:layout_constraintEnd_toEndOf="@+id/galleryButton"
-        app:layout_constraintStart_toStartOf="@+id/cameraButton"
-        app:layout_constraintTop_toBottomOf="@+id/cameraButton" />
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/galleryButton" />
 
+    <!-- Email EditText -->
     <EditText
         android:id="@+id/editTextText2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Email"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/editTextText"
+        android:inputType="textEmailAddress"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText" />
 
+    <!-- Password EditText -->
     <EditText
         android:id="@+id/editTextText3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="Pass"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/editTextText2"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
 
+    <!-- Save Button -->
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:text="Save"
-        app:layout_constraintEnd_toEndOf="@+id/editTextText3"
-        app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toStartOf="@+id/editTextText3"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#4CAF50"
+        android:paddingHorizontal="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
 
+    <!-- Role RadioGroup -->
     <RadioGroup
         android:id="@+id/roleRadioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/button3"
-        app:layout_constraintStart_toStartOf="@+id/button3"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button3">
 
         <RadioButton
             android:id="@+id/adminRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="Admin" />
+            android:text="Admin"
+            android:textColor="#6200EE"
+            android:layout_marginEnd="16dp" />
 
         <RadioButton
             android:id="@+id/userRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User" />
+            android:text="User"
+            android:textColor="#6200EE" />
     </RadioGroup>
 
+    <!-- Delete Profile Button -->
     <Button
         android:id="@+id/deleteProfileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#FF5252"
         android:text="Delete Profile"
-        app:layout_constraintEnd_toEndOf="@+id/roleRadioGroup"
-        app:layout_constraintStart_toStartOf="@+id/roleRadioGroup"
+        android:textColor="#FFFFFF"
+        android:paddingHorizontal="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/roleRadioGroup" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

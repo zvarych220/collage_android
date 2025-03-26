@@ -1,8 +1,10 @@
-<!-- res/layout/dialog_checkout.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,15 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Оформлення замовлення"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold"
+            android:textColor="@color/black"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Recipient Name -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
             android:hint="Ім'я отримувача">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -33,11 +35,10 @@
                 android:maxLines="1"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Phone Number -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="12dp"
             android:hint="Номер телефону">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -48,11 +49,10 @@
                 android:maxLines="1"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Delivery Address -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:hint="Адреса доставки">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -63,12 +63,13 @@
                 android:maxLines="3"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Payment Method -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Спосіб оплати:"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
         <RadioGroup
             android:id="@+id/rgPaymentMethod"
@@ -90,7 +91,6 @@
                 android:text="Оплата картою онлайн"/>
         </RadioGroup>
 
-        <!-- Card Details (initially hidden) -->
         <LinearLayout
             android:id="@+id/llCardDetails"
             android:layout_width="match_parent"
@@ -149,11 +149,12 @@
             </LinearLayout>
         </LinearLayout>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConfirmOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Підтвердити замовлення"/>
+            android:text="Підтвердити замовлення"
+            style="@style/Widget.MaterialComponents.Button"/>
     </LinearLayout>
 </ScrollView>
