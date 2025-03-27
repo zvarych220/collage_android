@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="24dp">
 
         <LinearLayout
             android:id="@+id/headerLayout"
@@ -20,12 +21,13 @@
 
             <ImageButton
                 android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:src="@drawable/baseline_arrow_back_ios_24" />
+                android:padding="12dp"
+                android:src="@drawable/baseline_arrow_back_ios_24"
+                android:tint="@color/black" />
 
             <TextView
                 android:id="@+id/tvProductTitle"
@@ -34,7 +36,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
                 tools:text="Product Name" />
         </LinearLayout>
@@ -42,8 +44,10 @@
         <FrameLayout
             android:id="@+id/imageContainer"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="24dp"
+            android:background="@android:color/darker_gray"
+            android:elevation="4dp"
             app:layout_constraintTop_toBottomOf="@id/headerLayout">
 
             <androidx.viewpager2.widget.ViewPager2
@@ -54,7 +58,7 @@
             <LinearLayout
                 android:id="@+id/layoutIndicators"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="16dp"
                 android:layout_gravity="bottom"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -65,13 +69,23 @@
             android:id="@+id/tvPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/black"
-            android:textSize="22sp"
+            android:layout_marginTop="24dp"
+            android:background="@color/design_default_color_primary"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imageContainer"
             tools:text="₴1999.99" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#EEEEEE"
+            app:layout_constraintTop_toBottomOf="@id/tvPrice" />
 
         <TextView
             android:id="@+id/tvCategoryLabel"
@@ -79,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Category:"
-            android:textColor="@color/black"
+            android:textColor="#666666"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -98,13 +112,20 @@
             app:layout_constraintTop_toTopOf="@id/tvCategoryLabel"
             tools:text="Electronics" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#EEEEEE"
+            app:layout_constraintTop_toBottomOf="@id/tvCategoryLabel" />
+
         <TextView
             android:id="@+id/tvDescriptionLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Description:"
-            android:textColor="@color/black"
+            android:textColor="#666666"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/tvCategoryLabel" />
@@ -114,6 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:lineSpacingExtra="4dp"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/tvDescriptionLabel"
@@ -122,16 +144,13 @@
         <Button
             android:id="@+id/btnAddToCart"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:background="@color/design_default_color_primary"
-            android:padding="16dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:elevation="4dp"
             android:text="Add to Cart"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

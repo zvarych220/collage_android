@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray"
+    android:background="#F5F5F5"
     android:fillViewport="true">
 
     <LinearLayout
@@ -16,54 +16,58 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
-            app:strokeColor="@color/gray"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="6dp"
+            app:strokeColor="#E0E0E0"
             app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <!-- Header Section -->
                 <TextView
                     android:id="@+id/orderNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-                    android:textColor="@color/primary_color"
-                    tools:text="Order #12345" />
+                    android:text="Order #12345"
+                    android:textColor="#3F51B5"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02"/>
 
                 <!-- Status Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_status"
-                        android:tint="@color/primary_color" />
+                        android:tint="#3F51B5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/status"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+                        android:text="Status:"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/statusValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:text="Processing"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:text="Обробка" />
+                        android:textColor="#FF5722"/>
                 </LinearLayout>
 
                 <!-- Divider -->
@@ -71,73 +75,79 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginVertical="16dp"
-                    android:background="@color/gray" />
+                    android:background="#EEEEEE" />
 
                 <!-- Order Details -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/order_details"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    android:text="Order Details"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"/>
 
                 <!-- Total Amount -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_total"
-                        android:tint="@color/primary_color" />
+                        android:tint="#3F51B5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/total"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                        android:text="Total:"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/totalValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        android:text="₴999.99"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:text="₴999.99" />
+                        android:textColor="#212121"/>
                 </LinearLayout>
 
                 <!-- Date -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_date"
-                        android:tint="@color/primary_color" />
+                        android:tint="#3F51B5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/date"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                        android:text="Date:"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/dateValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        android:text="2023-10-01"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:text="2023-10-01" />
+                        android:textColor="#212121"/>
                 </LinearLayout>
 
                 <!-- Divider -->
@@ -145,134 +155,146 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginVertical="16dp"
-                    android:background="@color/gray" />
+                    android:background="#EEEEEE" />
 
                 <!-- Customer Info -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/customer_info"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    android:text="Customer Info"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"/>
 
                 <!-- Name -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_person"
-                        android:tint="@color/primary_color" />
+                        android:tint="#3F51B5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/name"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                        android:text="Name:"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/customerNameValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        android:text="John Doe"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:text="John Doe" />
+                        android:textColor="#212121"/>
                 </LinearLayout>
 
                 <!-- Phone -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_phone"
-                        android:tint="@color/primary_color" />
+                        android:tint="#3F51B5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/phone"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                        android:text="Phone:"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/phoneValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        android:text="+380991234567"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:text="+380991234567" />
+                        android:textColor="#212121"/>
                 </LinearLayout>
 
                 <!-- Address -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_location"
-                        android:tint="@color/primary_color" />
+                        android:tint="#3F51B5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/address"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                        android:text="Address:"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/addressValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        android:text="Kyiv, Ukraine, 01001, Main Street 15, apt. 42"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:text="Kyiv, Ukraine" />
+                        android:textColor="#212121"/>
                 </LinearLayout>
 
                 <!-- Payment Method -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_payment"
-                        android:tint="@color/primary_color" />
+                        android:tint="#3F51B5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="@string/payment_method"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                        android:text="Payment:"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/paymentValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                        android:text="Credit Card (Visa ****1234)"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:text="Credit Card" />
+                        android:textColor="#212121"/>
                 </LinearLayout>
+
+
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
