@@ -5,7 +5,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
-    <!-- Existing fragments -->
+    <!-- Authentication Flow -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.click_projeck.LoginFragment"
@@ -29,37 +29,183 @@
             app:destination="@id/loginFragment" />
     </fragment>
 
+    <!-- Main Flow -->
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.click_projeck.MainFragment"
-        android:label="MainFragment"
-        tools:layout="@layout/fragment_main" />
+        android:label="MainFragment">
+        <action
+            android:id="@+id/action_mainFragment_to_orderUserDetailFragment"
+            app:destination="@id/orderUserDetailFragment" />
+    </fragment>
 
-    <fragment
-        android:id="@+id/cameraFragment"
-        android:name="com.example.click_projeck.CameraFragment"
-        android:label="CameraFragment"
-        tools:layout="@layout/fragment_camera" />
-
-    <!-- New fragments -->
-    <fragment
-        android:id="@+id/emptyFragment"
-        android:name="com.example.click_projeck.EmptyFragment"
-        android:label="EmptyFragment"
-        tools:layout="@layout/fragment_empty" />
-
+    <!-- Profile Section -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.click_projeck.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_editProfile"
             app:destination="@id/editProfile" />
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profileFragment_to_adminFragment"
+            app:destination="@id/adminFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/editProfile"
         android:name="com.example.click_projeck.EditProfile"
         android:label="EditProfile" />
 
+    <!-- Admin Section -->
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.example.click_projeck.AdminFragment"
+        android:label="Admin Panel"
+        tools:layout="@layout/fragment_admin">
+        <action
+            android:id="@+id/action_adminFragment_to_productManagementFragment"
+            app:destination="@id/productManagementFragment" />
+        <action
+            android:id="@+id/action_adminFragment_to_userListFragment"
+            app:destination="@id/userListFragment" />
+        <action
+            android:id="@+id/action_adminFragment_to_orderManagementFragment"
+            app:destination="@id/orderManagementFragment" />
+    </fragment>
+
+    <!-- Product Management -->
+    <fragment
+        android:id="@+id/productManagementFragment"
+        android:name="com.example.click_projeck.ProductManagementFragment"
+        android:label="Product Management"
+        tools:layout="@layout/fragment_product_management">
+        <action
+            android:id="@+id/action_productManagementFragment_to_productListFragment"
+            app:destination="@id/productListFragment" />
+        <action
+            android:id="@+id/action_productManagementFragment_to_createProductFragment"
+            app:destination="@id/createProductFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createProductFragment"
+        android:name="com.example.click_projeck.CreateProductFragment"
+        android:label="Create Product"
+        tools:layout="@layout/fragment_create_product" />
+
+    <!-- Product Details -->
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.example.click_projeck.ProductDetailFragment"
+        android:label="ProductDetailFragment">
+        <argument
+            android:name="productId"
+            app:argType="integer" />
+    </fragment>
+
+    <!-- Order Management -->
+    <fragment
+        android:id="@+id/orderManagementFragment"
+        android:name="com.example.click_projeck.OrderManagementFragment"
+        android:label="Order Management"
+        tools:layout="@layout/fragment_order_management">
+        <action
+            android:id="@+id/action_orderManagementFragment_to_orderDetailFragment"
+            app:destination="@id/orderDetailFragment" />
+    </fragment>
+
+    <!-- User Management -->
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.example.click_projeck.UserListFragment"
+        android:label="User List">
+        <action
+            android:id="@+id/action_userListFragment_to_userDetailFragment"
+            app:destination="@id/userDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userDetailFragment"
+        android:name="com.example.click_projeck.UserDetailFragment"
+        android:label="User Details"
+        tools:layout="@layout/fragment_user_detail">
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+    </fragment>
+
+    <!-- Order Details -->
+    <fragment
+        android:id="@+id/orderDetailFragment"
+        android:name="com.example.click_projeck.OrderDetailFragment"
+        android:label="Order Details"
+        tools:layout="@layout/fragment_order_detail">
+        <argument
+            android:name="order_id"
+            app:argType="integer" />
+    </fragment>
+
+    <!-- User Order Details -->
+    <fragment
+        android:id="@+id/orderUserDetailFragment"
+        android:name="com.example.click_projeck.OrderUserDetailFragment"
+        android:label="Order Details">
+        <argument
+            android:name="order_id"
+            app:argType="integer" />
+    </fragment>
+
+    <!-- Cart -->
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.click_projeck.CartFragment"
+        android:label="CartFragment" />
+
+    <!-- Product List -->
+    <fragment
+        android:id="@+id/productListFragment"
+        android:name="com.example.click_projeck.ProductListFragment"
+        android:label="Product List"
+        tools:layout="@layout/fragment_product_list">
+        <action
+            android:id="@+id/action_productListFragment_to_editProductFragment"
+            app:destination="@id/editProductFragment" />
+    </fragment>
+
+    <!-- Edit Product -->
+    <fragment
+        android:id="@+id/editProductFragment"
+        android:name="com.example.click_projeck.EditProductFragment"
+        android:label="Edit Product"
+        tools:layout="@layout/fragment_edit_product">
+        <argument
+            android:name="productId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.example.click_projeck.ProductFragment"
+        android:label="ProductFragment">
+        <action
+            android:id="@+id/action_productFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment">
+            <argument
+                android:name="productId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+    <action
+        android:id="@+id/action_productFragment_to_productDetailFragment"
+        app:destination="@id/productDetailFragment">
+        <argument
+            android:name="productId"
+            app:argType="integer" />
+    </action>
 </navigation>

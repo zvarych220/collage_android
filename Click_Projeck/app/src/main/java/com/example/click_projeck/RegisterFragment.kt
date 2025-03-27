@@ -13,14 +13,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.click_projeck.databinding.FragmentRegisterBinding
-import kotlinx.coroutines.launch
-import java.util.Calendar
-
 import data.AppDatabase
-import androidx.lifecycle.lifecycleScope
 import data.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Calendar
 
 class RegisterFragment : Fragment() {
     private val PREFS_NAME = "UserPrefs"
@@ -34,9 +32,7 @@ class RegisterFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var navController: NavController
     private lateinit var sharedPref: SharedPreferences
-
-    // Оголошення змінної БД - розкоментуйте коли додасте необхідні класи
-     private lateinit var db: AppDatabase
+    private lateinit var db: AppDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,14 +47,9 @@ class RegisterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         navController = findNavController()
-
-        // Створення БД - розкоментуйте коли додасте необхідні класи
-         db = AppDatabase.getInstance(requireContext())
-
-        // Ініціалізуємо SharedPreferences
+        db = AppDatabase.getInstance(requireContext())
         sharedPref = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-        // Налаштовуємо DatePicker для поля дати народження
         binding.etDateOfBirth.setOnClickListener {
             showDatePicker()
         }
@@ -71,40 +62,81 @@ class RegisterFragment : Fragment() {
             val about = binding.etAbout.text.toString().trim()
             val dob = binding.etDateOfBirth.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() ||
-                nickname.isEmpty() || about.isEmpty() || dob.isEmpty()) {
-                Toast.makeText(requireContext(), "Заповніть всі поля!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            when {
+                email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() ||
+                        nickname.isEmpty() || about.isEmpty() || dob.isEmpty() -> {
+                    Toast.makeText(requireContext(), "Заповніть всі поля!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                !isValidEmail(email) -> {
+                    Toast.makeText(requireContext(), "Некоректний формат email", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                password != confirmPassword -> {
+                    Toast.makeText(requireContext(), "Паролі не співпадають", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
             }
 
-            if (password != confirmPassword) {
-                Toast.makeText(requireContext(), "Паролі не співпадають", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val user = User(null, nickname, email, password, about, dob)
             lifecycleScope.launch(Dispatchers.IO) {
-                db.userDao().insertUser(user)
+                val emailExists = db.userDao().isEmailExists(email)
+                val userCount = db.userDao().getUserCount()
+
+                withContext(Dispatchers.Main) {
+                    if (emailExists > 0) {
+                        Toast.makeText(requireContext(), "Користувач з таким email вже існує", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Визначаємо, чи це перший користувач (буде адміном)
+                        val isFirstUser = userCount == 0
+
+                        // Реєстрація
+                        val user = User(
+                            null,
+                            nickname,
+                            email,
+                            password,
+                            about,
+                            dob,
+                            null,
+                            isFirstUser
+                        )
+
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            db.userDao().insertUser(user)
+                            withContext(Dispatchers.Main) {
+                                // Збереження даних у SharedPreferences
+                                sharedPref.edit().apply {
+                                    putString(EMAIL_KEY, email)
+                                    putString(PASSWORD_KEY, password)
+                                    putString(USERNAME_KEY, nickname)
+                                    putString(ABOUT_KEY, about)
+                                    putString(DOB_KEY, dob)
+                                    apply()
+                                }
+
+                                val message = if (isFirstUser) {
+                                    "Реєстрація успішна! Ви призначені адміністратором."
+                                } else {
+                                    "Реєстрація успішна!"
+                                }
+
+                                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                                navController.navigate(R.id.action_registerFragment_to_loginFragment)
+                            }
+                        }
+                    }
+                }
             }
-
-
-            // Збереження даних у SharedPreferences
-            sharedPref.edit().apply {
-                putString(EMAIL_KEY, email)
-                putString(PASSWORD_KEY, password)
-                putString(USERNAME_KEY, nickname)
-                putString(ABOUT_KEY, about)
-                putString(DOB_KEY, dob)
-                apply()
-            }
-
-            Toast.makeText(requireContext(), "Реєстрація успішна!", Toast.LENGTH_SHORT).show()
-            navController.navigate(R.id.action_registerFragment_to_loginFragment)
         }
 
         binding.btnBackToLogin.setOnClickListener {
             navController.popBackStack()
         }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailRegex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$")
+        return email.matches(emailRegex)
     }
 
     private fun showDatePicker() {

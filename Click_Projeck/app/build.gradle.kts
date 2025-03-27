@@ -9,6 +9,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
+
         applicationId = "com.example.click_projeck"
         minSdk = 24
         targetSdk = 35
@@ -16,6 +17,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        
     }
 
     buildTypes {
@@ -40,10 +43,16 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    implementation ("com.google.android.material:material:1.6.0")
+    implementation ("com.google.code.gson:gson:2.10.1")
+    implementation ("com.google.android.material:material:1.11.0")
     implementation ("androidx.room:room-runtime:2.6.1")
+    implementation(libs.firebase.firestore.ktx)
     kapt ("androidx.room:room-compiler:2.6.1")
     implementation ("androidx.room:room-ktx:2.6.1")
-
+    implementation ("androidx.preference:preference-ktx:1.2.1")
+    implementation ("com.google.android.material:material:1.11.0")
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation(libs.androidx.core.ktx)

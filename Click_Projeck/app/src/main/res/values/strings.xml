@@ -1,4 +1,7 @@
 <resources>
+    <string name="product_image">Product Image</string>
+
+
     <string name="app_name">Click_Projeck</string>
     <string name="btn_name">Click</string>
     <string name="title_name">Click button</string>
@@ -32,6 +35,64 @@
     <string name="click_7000">Seven thousand... you must be on the brink of madness!</string>
     <string name="click_9000">I\'d just turn off the computer if I were you!</string>
     <string name="click_10000">You could make a statue with ten thousand clicks. Writing your name on a monument.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="profile_image">Profile Image</string>
+    <string name="admin_role">Admin Role:</string>
+    <string name="delete_user">Delete User</string>
+
+
+    <string name="no_orders_found">У вас ще немає замовлень</string>
+    <string name="error_loading_orders">Помилка завантаження замовлень</string>
+    <string name="try_again">Спробувати знову</string>
+
+
+    <string name="edit_product">Edit Product</string>
+    <string name="product_name">Product Name</string>
+    <string name="product_description">Description</string>
+    <string name="product_price">Price</string>
+    <string name="product_category">Category</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="order_id_template">Order ID: #%d</string>
+    <string name="order_status_template">Status: %s</string>
+    <string name="order_date_template">Date: %s</string>
+    <string name="order_total_template">Total: %.2f</string>
+    <string name="customer_information">Customer Information</string>
+    <string name="order_items">Order Items</string>
+    <string name="recipient_name_template">Recipient: %s</string>
+    <string name="phone_number_template">Phone: %s</string>
+    <string name="delivery_address_template">Address: %s</string>
+    <string name="payment_method_template">Payment: %s</string>
+
+
+    <string name="order_id">Order ID</string>
+    <string name="order_status">Status</string>
+    <string name="order_date">Date</string>
+    <string name="order_total">Total</string>
+
+
+    <string name="status">Статус</string>
+    <string name="order_details">Деталі замовлення</string>
+    <string name="total">Сума</string>
+    <string name="date">Дата</string>
+    <string name="customer_info">Інформація про клієнта</string>
+    <string name="name">Ім\'я</string>
+    <string name="phone">Телефон</string>
+    <string name="address">Адреса</string>
+    <string name="payment_method">Спосіб оплати</string>
+    <string name="price_format">₴%.2f</string>
+    <string name="order_number">Замовлення #%d</string>
+    <string name="order_not_found">Замовлення не знайдено</string>
+
+
+    <string name="take_new_photo">Take New Photo</string>
+    <string name="select_from_gallery">Select from Gallery</string>
+    <string name="enter_your_nickname">Enter your Nickname</string>
+    <string name="enter_your_email">Enter your Email</string>
+    <string name="enter_your_password">Enter your Password</string>
+    <string name="admin">Admin</string>
+    <string name="user">User</string>
+    <string name="delete_profile">Delete Profile</string>
 
 </resources>

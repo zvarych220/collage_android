@@ -3,17 +3,26 @@ package com.example.click_projeck
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.text.Editable
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.click_projeck.databinding.FragmentProfileBinding
+import data.AppDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private lateinit var db: AppDatabase
+    private lateinit var sessionManager: SessionManager
+    private var isAdmin = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,33 +35,98 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Ініціалізація бази даних та SessionManager
+        db = AppDatabase.getInstance(requireContext())
+        sessionManager = SessionManager(requireContext())
+
         loadUserData()
         loadUserImage()
 
         binding.btnGoToEdit.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_editProfile)
         }
-    }
 
-    private fun loadUserData() {
-        val prefs = requireContext().getSharedPreferences("UserData", android.content.Context.MODE_PRIVATE)
-        val currentUserEmail = prefs.getString("CurrentUser", "") ?: ""
+        binding.btnAdminPanel.visibility = View.GONE
+        binding.btnAdminPanel.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_adminFragment)
+        }
 
-
-        if (currentUserEmail.isNotEmpty()) {
-            val email = prefs.getString("${currentUserEmail}_email", "")
-            val nickname = prefs.getString("${currentUserEmail}_nickname", "")
-
-            binding.tvEmail.text = "Email: $email"
-            binding.tvNickname.text = "Nickname: $nickname"
-
-        } else {
-            binding.tvEmail.text = "Email: Not available"
-            binding.tvNickname.text = "Nickname: Not available"
+        binding.btnLogout.setOnClickListener {
+            sessionManager.logout()
+            findNavController().navigate(R.id.action_profileFragment_to_loginFragment)
         }
     }
 
+    private fun loadUserData() {
+        if (sessionManager.isLoggedIn()) {
+            val userDetails = sessionManager.getUserDetails()
+            val currentUserEmail = userDetails[SessionManager.KEY_USER_EMAIL] ?: ""
+
+            if (currentUserEmail.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val user = db.userDao().getUserByEmail(currentUserEmail)
+
+                    withContext(Dispatchers.Main) {
+                        if (user != null) {
+                            binding.tvEmail.text = user.email
+                            binding.tvNickname.text = user.name
+                            binding.tvAbout.text = user.about
+                            binding.tvDateOfBirth.text = user.dob
+
+                            // Перевірка, чи користувач є адміністратором
+                            isAdmin = user.isAdmin
+                            binding.btnAdminPanel.visibility = if (isAdmin) View.VISIBLE else View.GONE
+
+                            // Перевірка, чи це єдиний користувач, і призначення його адміністратором, якщо потрібно
+                            checkAndSetFirstUserAsAdmin(user)
+                        } else {
+                            setDefaultUserInfo()
+                        }
+                    }
+                }
+            } else {
+                setDefaultUserInfo()
+            }
+        } else {
+            setDefaultUserInfo()
+        }
+    }
+
+
+
+    private fun checkAndSetFirstUserAsAdmin(user: data.User) {
+        if (user.isAdmin) return // Вже адміністратор, нічого робити не потрібно
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val userCount = db.userDao().getUserCount()
+            if (userCount == 1 && !user.isAdmin) {
+                // Це єдиний користувач, призначити його адміністратором
+                user.id?.let {
+                    db.userDao().setUserAsAdmin(it)
+                    withContext(Dispatchers.Main) {
+                        isAdmin = true
+                        binding.btnAdminPanel.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+    private fun setDefaultUserInfo() {
+        binding.tvEmail.text = "Email: Not available"
+        binding.tvNickname.text = "Nickname: Not available"
+        binding.tvAbout.text = "About: Not available"
+        binding.tvDateOfBirth.text = "Date of Birth: Not available"
+        binding.btnAdminPanel.visibility = View.GONE
+    }
+
+
+    private fun setText(editText: com.google.android.material.textfield.TextInputEditText, text: String) {
+        editText.text = Editable.Factory.getInstance().newEditable(text)
+    }
+
     private fun loadUserImage() {
+        // Завантаження зображення з SharedPreferences
         val encodedImage = requireActivity().getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
             .getString("profileImage", null)
         if (encodedImage != null) {
@@ -60,12 +134,10 @@ class ProfileFragment : Fragment() {
             val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
             binding.profileImage.setImageBitmap(bitmap)
         } else {
-            // Встановіть зображення за замовчуванням
+            // Встановлення зображення за замовчуванням
             binding.profileImage.setImageResource(R.drawable.ic_profile)
         }
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

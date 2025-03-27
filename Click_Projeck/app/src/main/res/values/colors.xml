@@ -1,5 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+
+    <color name="purple_500">#6200EE</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#757575</color>
+    <color name="gray_light">#F5F5F5</color>
+    <color name="red">#FF0000</color>
+
+    <color name="colorPrimary">#3F51B5</color> <!-- Приклад синього кольору -->
+
+    <color name="cardBackground">#FFFFFF</color>
+    <color name="textPrimary">#212121</color>
+    <color name="textSecondary">#757575</color>
+    <color name="statusColor">#1976D2</color> <!-- Синій для статусу -->
+    <color name="totalColor">#388E3C</color> <!-- Зелений для суми -->
+    <color name="dateColor">#616161</color> <!-- Сірий для дати -->
+    <color name="cardShadow">#E0E0E0</color> <!-- Тінь для картки -->
+
+    <color name="green">#4CAF50</color>
+
+    <string name="product_list_title">Мої продукти</string>
+    <string name="no_products_found">Продуктів не знайдено</string>
+    <string name="add_first_product">Додати перший продукт</string>
+
+    <style name="OrderDetailTitle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="OrderDetailSectionTitle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="OrderDetailItem">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
+
+    <color name="light_gray_background">#F5F5F5</color>
+
+    <color name="dividerColor">#E0E0E0</color>
+
+
+    <color name="light_gray">#F5F5F5</color>
+    <color name="primary_color">#3F51B5</color>
+
 </resources>

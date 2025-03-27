@@ -1,29 +1,30 @@
 package com.example.click_projeck
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.click_projeck.databinding.FragmentMainBinding
-import kotlinx.coroutines.Dispatchers
+import data.AppDatabase
+import data.Order
+import data.dao.OrderDao
+import data.dao.UserDao
 import kotlinx.coroutines.launch
+import androidx.navigation.fragment.findNavController
 
 class MainFragment : Fragment() {
-    var index = 0
-    var coin = 0
-    var priseClick = 2
-    var priseSteps = 2
-    var inStep = 1
-    var indexNumber = 0
-    var step = 10
-    var nickname = " "
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
+    private lateinit var orderDao: OrderDao
+    private lateinit var userDao: UserDao
+    private lateinit var sessionManager: SessionManager
+    private lateinit var orderAdapter: OrderAdapter
+    private lateinit var database: AppDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,225 +37,91 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.getString("Name")?.let {
-            nickname = it
-        }
-        loadData()
-        updateUI()
-        setupClickListeners()
+
+        // Ініціалізація бази даних та сесії
+        database = AppDatabase.getInstance(requireContext())
+        orderDao = database.orderDao()
+        userDao = database.userDao()
+        sessionManager = SessionManager(requireContext())
+
+        // Налаштування адаптера
+        setupAdapter()
+
+        // Завантаження замовлень
+        loadOrders()
     }
 
-    private fun updateUI() {
-        binding.apply {
-            tvPriseClick.text = getString(R.string.prise, priseClick)
-            tvPriseStep.text = getString(R.string.prise, priseSteps)
-            tvName.text = nickname
+    private fun setupAdapter() {
+        orderAdapter = OrderAdapter { order ->
+            order.id?.let { id ->
+                findNavController().navigate(
+                    R.id.action_mainFragment_to_orderUserDetailFragment,
+                    bundleOf("order_id" to order.id) // Make sure 'order' is available in your scope
+                )
+            }
+        }
 
-            // Update coin display
-            tvCoin.visibility = View.VISIBLE
-            tvCoin.text = getString(R.string.coin_name, coin)
-
-            // Update step counter
-            tvCount.visibility = View.VISIBLE
-            tvCount.text = getString(R.string.count, inStep)
-
-            // Update step display
-            tvStep.visibility = View.VISIBLE
-            tvStep.text = getString(R.string.step, step)
-
-            // Update main counter
-            tvText.text = index.toString()
-
-            updateButtonText()
-
-            // Debug log
-            Log.d("MainFragment", "UI Updated - Coins: $coin, InStep: $inStep, Step: $step")
+        binding.ordersRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = orderAdapter
+            setHasFixedSize(true)
         }
     }
 
-    private fun setupClickListeners() {
-        binding.apply {
-            tvPriseClick.setOnClickListener {
-                Log.d("MainFragment", "PriseClick clicked - Current coins: $coin, Price: $priseClick")
-                onClickPlas()
-            }
-
-
-
-            tvPriseStep.setOnClickListener {
-                Log.d("MainFragment", "PriseStep clicked - Current coins: $coin, Price: $priseSteps")
-                onClickReduceStep()
-            }
-
-            btnClick.setOnClickListener {
-                onClickBtn()
-            }
-        }
-    }
-
-    private fun onClickPlas() {
-        if (coin >= priseClick) {
-            if (inStep <= 9) {
-                coin -= priseClick
-                inStep++
-                priseClick *= 2
-
-                binding.apply {
-                    tvCount.visibility = View.VISIBLE
-                    tvCount.text = getString(R.string.count, inStep)
-                    tvCoin.text = getString(R.string.coin_name, coin)
-
-                    if (inStep == 9) {
-                        tvPriseClick.text = getString(R.string.full_value)
-                    } else {
-                        tvPriseClick.text = getString(R.string.prise, priseClick)
-                    }
+    private fun loadOrders() {
+        lifecycleScope.launch {
+            try {
+                val userEmail = sessionManager.getUserDetails()[SessionManager.KEY_USER_EMAIL]
+                if (userEmail != null) {
+                    val user = userDao.getUserByEmail(userEmail)
+                    user?.let {
+                        val orders = orderDao.getOrdersByUser(it.id ?: 0)
+                        if (orders.isEmpty()) {
+                            showEmptyState()
+                        } else {
+                            showOrders(orders)
+                        }
+                    } ?: showEmptyState()
+                } else {
+                    showEmptyState()
                 }
-
-                saveDataAsync()
-                Log.d("MainFragment", "Upgrade successful - New inStep: $inStep, Remaining coins: $coin")
+            } catch (e: Exception) {
+                showErrorState()
             }
-        } else {
-            Toast.makeText(context, "Not enough coins! Need $priseClick coins.", Toast.LENGTH_SHORT).show()
-            Log.d("MainFragment", "Not enough coins for upgrade - Has: $coin, Needs: $priseClick")
         }
     }
 
-    private fun onClickReduceStep() {
-        if (coin >= priseSteps) {
-            if (step > 1) {
-                coin -= priseSteps
-                priseSteps *= 2
-                step--
-
-                binding.apply {
-                    tvStep.visibility = View.VISIBLE
-                    tvStep.text = getString(R.string.step, step)
-                    tvCoin.text = getString(R.string.coin_name, coin)
-
-                    if (step == 1) {
-                        tvPriseStep.text = getString(R.string.full_value)
-                    } else {
-                        tvPriseStep.text = getString(R.string.prise, priseSteps)
-                    }
-                }
-
-                saveDataAsync()
-                Log.d("MainFragment", "Step reduced - New step: $step, Remaining coins: $coin")
-            }
-        } else {
-            Toast.makeText(context, "Not enough coins! Need $priseSteps coins.", Toast.LENGTH_SHORT).show()
-            Log.d("MainFragment", "Not enough coins for step reduction - Has: $coin, Needs: $priseSteps")
-        }
-    }
-
-    private fun onClickBtn() {
-        index += inStep
-        indexNumber += inStep
-
-        while (indexNumber >= step) {
-            coin++
-            indexNumber -= step
-        }
-
+    private fun showOrders(orders: List<Order>) {
         binding.apply {
-            tvCoin.visibility = View.VISIBLE
-            tvCoin.text = getString(R.string.coin_name, coin)
-            tvText.text = index.toString()
+            ordersRecyclerView.visibility = View.VISIBLE
+            emptyStateView.visibility = View.GONE
+            errorStateView.visibility = View.GONE
         }
-
-        updateButtonText()
-        saveDataAsync()
-        Log.d("MainFragment", "Button clicked - Index: $index, Coins: $coin")
+        orderAdapter.submitList(orders)
     }
 
-    private fun updateButtonText() {
-        val text = when (index) {
-            in 1..9 -> R.string.btn_name
-            in 10..24 -> R.string.click_10
-            in 25..49 -> R.string.click_25
-            in 50..99 -> R.string.click_50
-            in 100..199 -> R.string.click_100
-            in 200..499 -> R.string.click_200
-            in 500..799 -> R.string.click_500
-            in 800..999 -> R.string.click_800
-            in 1000..1999 -> R.string.click_1000
-            in 2000..2999 -> R.string.click_2000
-            in 3000..4999 -> R.string.click_3000
-            in 5000..6999 -> R.string.click_5000
-            in 7000..8999 -> R.string.click_7000
-            in 9000..9999 -> R.string.click_9000
-            else -> R.string.click_10000
-        }
-        binding.btnClick.setText(text)
-    }
-
-    private fun saveDataAsync() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            saveData()
+    private fun showEmptyState() {
+        binding.apply {
+            ordersRecyclerView.visibility = View.GONE
+            emptyStateView.visibility = View.VISIBLE
+            errorStateView.visibility = View.GONE
         }
     }
 
-    private fun saveData() {
-        try {
-            requireContext().getSharedPreferences("game_data", Context.MODE_PRIVATE)
-                .edit()
-                .putInt("index", index)
-                .putInt("coin", coin)
-                .putInt("priseClick", priseClick)
-                .putInt("priseSteps", priseSteps)
-                .putInt("inStep", inStep)
-                .putInt("indexNumber", indexNumber)
-                .putInt("step", step)
-                .apply()
-        } catch (e: Exception) {
-            e.printStackTrace()
+    private fun showErrorState() {
+        binding.apply {
+            ordersRecyclerView.visibility = View.GONE
+            emptyStateView.visibility = View.GONE
+            errorStateView.visibility = View.VISIBLE
         }
-    }
-
-    private fun loadData() {
-        try {
-            requireContext().getSharedPreferences("game_data", Context.MODE_PRIVATE).let { prefs ->
-                index = prefs.getInt("index", 0)
-                coin = prefs.getInt("coin", 0)
-                priseClick = prefs.getInt("priseClick", 2)
-                priseSteps = prefs.getInt("priseSteps", 2)
-                inStep = prefs.getInt("inStep", 1)
-                indexNumber = prefs.getInt("indexNumber", 0)
-                step = prefs.getInt("step", 10)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            resetToDefaultValues()
-        }
-    }
-
-    private fun resetToDefaultValues() {
-        index = 0
-        coin = 0
-        priseClick = 2
-        priseSteps = 2
-        inStep = 1
-        indexNumber = 0
-        step = 10
-    }
-
-    override fun onPause() {
-        super.onPause()
-        saveData()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        saveData()
         _binding = null
     }
 
     companion object {
-        fun newInstance(nickname: String) = MainFragment().apply {
-            arguments = Bundle().apply {
-                putString("Name", nickname)
-            }
-        }
+        fun newInstance() = MainFragment()
     }
 }
